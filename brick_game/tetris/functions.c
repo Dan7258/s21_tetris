@@ -70,56 +70,84 @@ void s21_remove_figure(figure_t *figure) {
 
 void s21_create_O(figure_t *figure) {
   s21_create_matrix(2, 2, figure->matrix);
+  
   figure->matrix->matrix[0][0] = 1;
   figure->matrix->matrix[0][1] = 1;
   figure->matrix->matrix[1][0] = 1;
   figure->matrix->matrix[1][1] = 1;
+
+  figure->x = 4;
+  figure->y = -2;
 }
 
 void s21_create_I(figure_t *figure) {
   s21_create_matrix(4, 4, figure->matrix);
+  
   figure->matrix->matrix[2][0] = 1;
   figure->matrix->matrix[2][1] = 1;
   figure->matrix->matrix[2][2] = 1;
   figure->matrix->matrix[2][3] = 1;
+
+  figure->x = 3;
+  figure->y = -3;
 }
 
 void s21_create_S(figure_t *figure) {
   s21_create_matrix(3, 3, figure->matrix);
-  figure->matrix->matrix[0][2] = 1;
-  figure->matrix->matrix[0][1] = 1;
-  figure->matrix->matrix[1][1] = 1;
+  
+  figure->matrix->matrix[0][0] = 1;
   figure->matrix->matrix[1][0] = 1;
+  figure->matrix->matrix[1][1] = 1;
+  figure->matrix->matrix[2][1] = 1;
+
+  figure->x = 4;
+  figure->y = -3;
 }
 
 void s21_create_Z(figure_t *figure) {
   s21_create_matrix(3, 3, figure->matrix);
-  figure->matrix->matrix[0][0] = 1;
+  
   figure->matrix->matrix[0][1] = 1;
   figure->matrix->matrix[1][1] = 1;
-  figure->matrix->matrix[1][2] = 1;
+  figure->matrix->matrix[1][0] = 1;
+  figure->matrix->matrix[2][0] = 1;
+
+  figure->x = 4;
+  figure->y = -3;
 }
 
 void s21_create_L(figure_t *figure) {
   s21_create_matrix(3, 3, figure->matrix);
+  
   figure->matrix->matrix[0][1] = 1;
   figure->matrix->matrix[1][1] = 1;
   figure->matrix->matrix[2][1] = 1;
   figure->matrix->matrix[2][2] = 1;
+  
+  figure->x = 3;
+  figure->y = -3;
 }
 
 void s21_create_J(figure_t *figure) {
   s21_create_matrix(3, 3, figure->matrix);
+  
   figure->matrix->matrix[0][2] = 1;
   figure->matrix->matrix[1][2] = 1;
   figure->matrix->matrix[2][2] = 1;
   figure->matrix->matrix[2][1] = 1;
+
+  figure->x = 3;
+  figure->y = -3;
 }
 
 void s21_create_T(figure_t *figure) {
   s21_create_matrix(3, 3, figure->matrix);
+  
   figure->matrix->matrix[1][0] = 1;
   figure->matrix->matrix[1][1] = 1;
   figure->matrix->matrix[1][2] = 1;
   figure->matrix->matrix[2][1] = 1;
+
+  figure->x = 4;
+  figure->y = -3;
 }
