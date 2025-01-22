@@ -1,8 +1,8 @@
 #ifndef BRICK_GAME_H
 #define BRICK_GAME_H
 
-#define ROWS_MAP 20
-#define COLS_MAP 10
+#define ROWS_FIELD 20
+#define COLS_FIELD 10
 #define MAX_LEVEL 10
 
 #include <stdio.h>

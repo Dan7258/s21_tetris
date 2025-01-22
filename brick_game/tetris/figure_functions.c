@@ -114,3 +114,45 @@ void s21_create_T(figure_t *figure) {
   figure->x = 4;
   figure->y = -3;
 }
+
+void move_figure_left(matrix_t *field, figure_t *figure) {
+  int flag = 1;
+
+  for(int m = 0; m < figure->matrix->rows; m++) {
+    for(int n = 0; n < figure->matrix->columns; n++) {
+      if(figure->matrix->matrix[m][n] && n + figure->x - 1 < 0) {
+        flag = 0;
+      }
+      if(flag && figure->matrix->matrix[m][n] && field->matrix[m + figure->y][n + figure->x - 1]) {
+        flag = 0;
+      }
+      if(!flag) {
+        m = figure->matrix->rows;
+        n = figure->matrix->columns;
+      }
+    }
+  }
+
+  figure->x = flag ? figure->x - 1 : figure->x;
+}
+
+void move_figure_right(matrix_t *field, figure_t *figure) {
+  int flag = 1;
+
+  for(int m = 0; m < figure->matrix->rows; m++) {
+    for(int n = 0; n < figure->matrix->columns; n++) {
+      if(figure->matrix->matrix[m][n] && n + figure->x + 1 > COLS_FIELD - 1) {
+        flag = 0;
+      }
+      if(flag && figure->matrix->matrix[m][n] && field->matrix[m + figure->y][n + figure->x + 1]) {
+        flag = 0;
+      }
+      if(!flag) {
+        m = figure->matrix->rows;
+        n = figure->matrix->columns;
+      }
+    }
+  }
+
+  figure->x = flag ? figure->x + 1 : figure->x;
+}
