@@ -1,42 +1,5 @@
 #include "brick_game.h"
 
-void s21_create_matrix(int rows, int columns, matrix_t *result) {
-  result->rows = rows;
-  result->columns = columns;
-  result->matrix = (double **)malloc(rows * sizeof(double *));
-  for (int i = 0; i < rows; i++) {
-    result->matrix[i] = (double *)calloc(columns, sizeof(double));
-  }
-}
-
-void s21_remove_matrix(matrix_t *M) {
-  for (int m = 0; m < M->rows; m++) {
-    free(M->matrix[m]);
-  }
-  free(M->matrix);
-  M->matrix = NULL;
-}
-
-void s21_turn_matrix(matrix_t *M) {
-  matrix_t copy_m = {0};
-  s21_copy_matrix(M, &copy_m);
-  for(int m = 0; m < M -> rows; m++) {
-    for(int n = 0; n < M -> columns; n++) {
-      M->matrix[m][n] = copy_m.matrix[n][(m - (M -> rows - 1)) * -1];
-    }
-  }
-  s21_remove_matrix(&copy_m);
-}
-
-void s21_copy_matrix(matrix_t *M, matrix_t *result) {
-  s21_create_matrix(M->rows, M->columns, result);
-  for(int m = 0; m < result -> rows; m++) {
-    for(int n = 0; n < result -> columns; n++) {
-      result->matrix[m][n] = M->matrix[m][n];
-    }
-  }
-}
-
 void s21_create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
   switch (SelectedFigure) {
   case 0:

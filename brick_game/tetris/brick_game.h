@@ -51,4 +51,21 @@ typedef struct {
     int pause;
 } GameInfo_t;
 
+//matrix functions
+void s21_create_matrix(int rows, int columns, matrix_t *result);
+void s21_remove_matrix(matrix_t *M);
+void s21_turn_matrix(matrix_t *M);
+void s21_copy_matrix(matrix_t *M, matrix_t *result);
+
+//figure functions
+void s21_create_figure(SelectedFigure_t SelectedFigure, figure_t *figure);
+void s21_remove_figure(figure_t *figure);
+void s21_create_O(figure_t *figure); 
+void s21_create_I(figure_t *figure);
+void s21_create_S(figure_t *figure);
+void s21_create_Z(figure_t *figure);
+void s21_create_L(figure_t *figure);
+void s21_create_J(figure_t *figure);
+void s21_create_T(figure_t *figure);
+
 #endif
