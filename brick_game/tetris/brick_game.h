@@ -67,5 +67,8 @@ void s21_create_Z(figure_t *figure);
 void s21_create_L(figure_t *figure);
 void s21_create_J(figure_t *figure);
 void s21_create_T(figure_t *figure);
+void move_figure_left(matrix_t *field, figure_t *figure);
+void move_figure_right(matrix_t *field, figure_t *figure);
+int move_figure_down(matrix_t *field, figure_t *figure);
 
 #endif

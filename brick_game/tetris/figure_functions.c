@@ -156,3 +156,25 @@ void move_figure_right(matrix_t *field, figure_t *figure) {
 
   figure->x = flag ? figure->x + 1 : figure->x;
 }
+
+int move_figure_down(matrix_t *field, figure_t *figure) {
+  int flag = 1;
+
+  for(int m = 0; m < figure->matrix->rows; m++) {
+    for(int n = 0; n < figure->matrix->columns; n++) {
+      if(figure->matrix->matrix[m][n] && m + figure->y + 1 > ROWS_FIELD - 1) {
+        flag = 0;
+      }
+      if(flag && figure->matrix->matrix[m][n] && field->matrix[m + figure->y + 1][n + figure->x]) {
+        flag = 0;
+      }
+      if(!flag) {
+        m = figure->matrix->rows;
+        n = figure->matrix->columns;
+      }
+    }
+  }
+
+  figure->y = flag ? figure->y + 1 : figure->y;
+  return flag;
+}
