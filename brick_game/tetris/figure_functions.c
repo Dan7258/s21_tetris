@@ -186,3 +186,32 @@ void remove_figure_on_field(matrix_t *field, figure_t *figure) {
     }
   }
 }
+
+int check_and_clear_rows(matrix_t *field) {
+  int f = 0;
+  int counter = 0;
+  for (int m = 0; m < ROWS_FIELD; m++) {
+    if(check_filled_row(m, field)) {
+      counter++;
+      for (;check_filled_row(f, field) && f < ROWS_FIELD; f++) {
+      }
+      for (int n = 0; n < COLS_FIELD; n++) {
+        if(f >= ROWS_FIELD) {
+          field->matrix[m][n] = 0;
+        } else {
+          field->matrix[m][n] = field->matrix[f][n];
+        }
+      }
+    }
+    f++;
+  }
+  return counter;
+}
+
+int check_filled_row(int m, matrix_t *field) {
+  int flag = 1;
+  for (int n = 0; n < COLS_FIELD && flag; n++) {
+    flag = !(field->matrix[m][n]) ? 0 : flag;
+  }
+  return flag;
+}

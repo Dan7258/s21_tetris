@@ -72,6 +72,7 @@ void move_figure_right(matrix_t *field, figure_t *figure);
 int move_figure_down(matrix_t *field, figure_t *figure);
 void add_figure_on_field(matrix_t *field, figure_t *figure);
 void remove_figure_on_field(matrix_t *field, figure_t *figure);
-
+int check_and_clear_rows(matrix_t *field);
+int check_filled_row(int m, matrix_t *field);
 
 #endif
