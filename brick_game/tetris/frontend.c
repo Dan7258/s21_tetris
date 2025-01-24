@@ -4,6 +4,7 @@ void s21_print_owerlay(GameInfo_t gameInfo) {
     s21_print_frame();
     s21_print_high_score(gameInfo);
     s21_print_score(gameInfo);
+    s21_print_level(gameInfo);
     refresh();
 }
 
@@ -62,6 +63,19 @@ void s21_print_score(GameInfo_t gameInfo) {
     snprintf(buffer, sizeof(buffer), "%d", gameInfo.score);
     for (int i = 0; buffer[i] != '\0'; i++) {
         mvaddch(6, i + COLS_FIELD + 4, buffer[i]);
+    }
+}
+
+void s21_print_level(GameInfo_t gameInfo) {
+    char score[] = "level:";
+    for(int i = 0; i < 6; i++) {
+        mvaddch(8, i + COLS_FIELD + 2, score[i]);    
+    }
+
+    char buffer[20];
+    snprintf(buffer, sizeof(buffer), "%d", gameInfo.level);
+    for (int i = 0; buffer[i] != '\0'; i++) {
+        mvaddch(9, i + COLS_FIELD + 4, buffer[i]);
     }
 }
 
