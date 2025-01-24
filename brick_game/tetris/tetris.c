@@ -1,7 +1,18 @@
 #include "brick_game.h"
 
 int main() {
-  game_loop();
+  setlocale(LC_ALL, "ru_RU.UTF-8");
+  initscr();              
+  cbreak();               
+  noecho();
+  // clear();
+  GameInfo_t gameInfo = {0};
+  gameInfo.score = 123456789;
+  gameInfo.high_score = 123456789;
+  s21_print_owerlay(gameInfo);
+  getch();
+  endwin();
+  // game_loop();
   return 0;
 }
 
@@ -33,6 +44,7 @@ void game_loop() {
       s21_check_and_clear_rows(&field);
       if(s21_check_lose(&field)) {
         s21_game_over(&field, &figure, &nextFigure);
+        endwin();
         break;
 
       } else {
