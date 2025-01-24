@@ -1,12 +1,17 @@
 #include "brick_game.h"
 
 void s21_create_matrix(int rows, int columns, matrix_t *result) {
-  result->rows = rows;
+  if(result == NULL) {
+    printf("aaaaaaaa");
+  } else {
+    result->rows = rows;
   result->columns = columns;
-  result->matrix = (double **)malloc(rows * sizeof(double *));
+  result->matrix = (int **)malloc(rows * sizeof(int *));
   for (int i = 0; i < rows; i++) {
-    result->matrix[i] = (double *)calloc(columns, sizeof(double));
+    result->matrix[i] = (int *)calloc(columns, sizeof(int));
   }
+  }
+  
 }
 
 void s21_remove_matrix(matrix_t *M) {
@@ -14,7 +19,7 @@ void s21_remove_matrix(matrix_t *M) {
     free(M->matrix[m]);
   }
   free(M->matrix);
-  M->matrix = NULL;
+  // M->matrix = NULL;
 }
 
 void s21_turn_matrix(matrix_t *M) {
