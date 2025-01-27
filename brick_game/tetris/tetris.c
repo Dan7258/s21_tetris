@@ -79,7 +79,7 @@ condition_t *s21_get_current_condition() {
   return &condition;
 }
 
-void s21_update_condition(condition_t *condition) {
+void s21_clean_condition(condition_t *condition) {
   s21_remove_matrix(condition->field);
   s21_remove_figure(condition->figure);
   s21_remove_figure(condition->nextFigure);
