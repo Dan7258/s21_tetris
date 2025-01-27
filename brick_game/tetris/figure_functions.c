@@ -36,14 +36,15 @@ void s21_remove_figure(figure_t *figure) {
 
 void s21_generate_figure(figure_t *figure) {
   s21_remove_figure(figure);
-  SelectedFigure_t select = rand() % 7;
+  SelectedFigure_t select = rand() % 6;
   s21_create_figure(select, figure);
 }
 
 void s21_replace_figure(figure_t *figure, figure_t *nextFigure) {
   s21_remove_figure(figure);
   s21_create_matrix(nextFigure->matrix->rows, nextFigure->matrix->columns, figure->matrix);
-  s21_copy_matrix(nextFigure->matrix, figure->matrix);
+  // s21_copy_matrix(nextFigure->matrix, figure->matrix);
+  figure->matrix = nextFigure->matrix;
   figure->x = nextFigure->x;
   figure->y = nextFigure->y;
 }
@@ -191,7 +192,7 @@ int s21_move_figure_down() {
 }
 
 void s21_move_figure_all_down() {
-  for(;s21_move_figure_down;) {
+  for(;s21_move_figure_down();) {
   }
 }
 
@@ -229,7 +230,7 @@ int s21_check_and_clear_rows() {
   for (int m = 0; m < ROWS_FIELD; m++) {
     if(s21_check_filled_row(m)) {
       counter++;
-      for (;s21_check_filled_row(f) && f < ROWS_FIELD; f++) {
+      for (;f < ROWS_FIELD && s21_check_filled_row(f); f++) {
       }
       for (int n = 0; n < COLS_FIELD; n++) {
         if(f >= ROWS_FIELD) {

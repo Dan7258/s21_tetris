@@ -5,11 +5,8 @@ int main() {
   initscr();              
   cbreak();               
   noecho();
+  // nodelay(stdscr, TRUE); 
   game_loop();
-  // GameInfo_t gameInfo = {0};
-  // gameInfo.score = 123456789;
-  // gameInfo.high_score = 123456789;
-  // s21_print_owerlay(gameInfo);
   getch();
   endwin();
   
@@ -17,13 +14,16 @@ int main() {
 }
 
 void game_loop() {
-  s21_print_owerlay(updateCurrentState());
-  userInput(getAct(), true);
+  // s21_print_start_menu();
+  // UserAction_t action = getAct();
+  UserAction_t action = Start;
+  updateCurrentState();
+  // !s21_check_lose(updateCurrentState())
   for(;;) {
+    userInput(action, true);
     s21_print_owerlay(updateCurrentState());
-    userInput(getAct(), true);
+    action = getAct();
   }
-
 }
 
 UserAction_t getAct() {
@@ -35,17 +35,18 @@ UserAction_t getAct() {
   case 27:
     action = Pause;
     break;
-  case 17:
+  case 'w':
     action = Up;
     break;
-  case 18:
+  case 'a':
     action = Left;
     break;
-  case 19:
+  case 'd':
     action = Right;
     break;
-  case 14:
+  case 's':
     action = Down;
+    break;
   case 32:
     action = Action;
     break;
@@ -75,16 +76,17 @@ void userInput(UserAction_t action, bool hold) {
   } else if(action == Action && condition->status == MovingG) {
     s21_turn();
   }
-  if(condition->status == MovingG) {
+  if(condition->status == MovingG || action == Up) {
+    mvprintw(15, 30, "%d", condition->status);
     s21_move_down();
   }
-  condition = s21_get_current_condition();
   if(condition->status == AttachingG) {
     s21_check_and_clear_rows();
-    if(s21_check_lose()) {
-      condition->status = GameOverG;
+    if(!s21_check_lose(updateCurrentState())) {
+      s21_spawn();
     }
   }
+  mvprintw(15, 30, "%d", condition->status);
 }
 
 GameInfo_t updateCurrentState() {
@@ -135,7 +137,9 @@ void s21_move_down() {
   if(condition->status != AttachingG) {
     condition->status = MovingG;
     s21_remove_figure_on_field();
-    s21_move_figure_down();
+    if(!s21_move_figure_down()) {
+      condition->status = AttachingG;
+    }
     s21_add_figure_on_field();
   }
   
@@ -167,7 +171,7 @@ void s21_start_game() {
   s21_create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
   s21_generate_figure(condition->figure);
   s21_generate_figure(condition->nextFigure);
-  condition->status = Start;
+  condition->status = MovingG;
 }
 
 condition_t *s21_get_current_condition() {
@@ -180,7 +184,7 @@ void s21_clean_condition() {
   s21_remove_matrix(condition->field);
   s21_remove_figure(condition->figure);
   s21_remove_figure(condition->nextFigure);
-  condition->status = Start;
+  condition->status = MovingG;
 }
 
 void s21_game_over() {
@@ -191,11 +195,10 @@ void s21_game_over() {
   condition->status = GameOverG;
 }
 
-int s21_check_lose() {
-  condition_t *condition = s21_get_current_condition();
+int s21_check_lose(GameInfo_t info) {
   int flag = 0;
   for (int m = 0; m < COLS_FIELD && !flag; m++) {
-    if(condition->field->matrix[0][m]) {
+    if(info.field[0][m]) {
       flag = 1;
     }
   }
@@ -204,8 +207,9 @@ int s21_check_lose() {
 
 void s21_spawn() {
   condition_t *condition = s21_get_current_condition();
-  s21_replace_figure(condition->figure, condition->nextFigure);
-  s21_generate_figure(condition->nextFigure);
+  // s21_replace_figure(condition->figure, condition->nextFigure);
+  s21_generate_figure(condition->figure);
+  condition->status = MovingG;
 }
 
 

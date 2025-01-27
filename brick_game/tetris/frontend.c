@@ -11,6 +11,11 @@ void s21_print_owerlay(GameInfo_t gameInfo) {
     refresh();
 }
 
+void s21_print_start_menu() {
+    mvprintw(5, 5, "press enter"); // Функция mvprintw перемещает курсор и печатает строку
+    refresh();  
+}
+
 void s21_print_frame() {
     mvaddch(0, 0, ACS_ULCORNER);
     mvaddch(0, COLS_FIELD + 1, ACS_URCORNER);

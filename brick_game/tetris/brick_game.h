@@ -129,5 +129,6 @@ void s21_print_next_figure(GameInfo_t gameInfo);
 void s21_print_score(GameInfo_t gameInfo);
 void s21_print_high_score(GameInfo_t gameInfo);
 void s21_print_level(GameInfo_t gameInfo);
+void s21_print_start_menu();
 
 #endif
