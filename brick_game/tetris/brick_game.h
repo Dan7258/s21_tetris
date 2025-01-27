@@ -58,17 +58,18 @@ typedef struct {
 
 typedef enum {
   Start = 0,
-  Spawn,
+  Init,
   Moving,
-  Shifting,
   Attaching,
-  GameOver
+  GameOver,
+  Pause,
+  Terminate
 } GameStatus_t;
 
 typedef struct condition {
   matrix_t *field;
-  matrix_t *figure;
-  matrix_t *nextFigure;
+  figure_t *figure;
+  figure_t *nextFigure;
   GameStatus_t status;
 } condition_t;
 
@@ -90,30 +91,35 @@ void s21_create_Z(figure_t *figure);
 void s21_create_L(figure_t *figure);
 void s21_create_J(figure_t *figure);
 void s21_create_T(figure_t *figure);
-void s21_move_figure_left(matrix_t *field, figure_t *figure);
-void s21_move_figure_right(matrix_t *field, figure_t *figure);
-int s21_move_figure_down(matrix_t *field, figure_t *figure);
-void s21_add_figure_on_field(matrix_t *field, figure_t *figure);
-void s21_remove_figure_on_field(matrix_t *field, figure_t *figure);
-int s21_check_and_clear_rows(matrix_t *field);
-int s21_check_filled_row(int m, matrix_t *field);
-int s21_check_lose(matrix_t *field);
-void s21_game_over(matrix_t *field, figure_t *figure, figure_t *nextFigure);
+void s21_move_figure_left();
+void s21_move_figure_right();
+int s21_move_figure_down();
+void s21_move_figure_all_down();
+void s21_turn_figure();
+void s21_add_figure_on_field();
+void s21_remove_figure_on_field();
+int s21_check_and_clear_rows();
+int s21_check_filled_row(int m);
+int s21_check_lose();
+void s21_game_over();
 
 // fsm functions
-// void userInput(UserAction_t action, bool hold);
-// GameInfo_t updateCurrentState();
-// void game_init(GameInfo_t game);
+void userInput(UserAction_t action, bool hold);
+GameInfo_t updateCurrentState();
 
 
 void game_loop();
 void s21_generate_figure(figure_t *figure);
-void s21_spawn(matrix_t *field, figure_t *figure, figure_t *nextFigure);
-int s21_moving(matrix_t *field, figure_t *figure, UserAction_t action);
-void s21_shift(matrix_t *field, figure_t *figure, UserAction_t action);
+void s21_spawn();
 void s21_init_condition();
 condition_t *s21_get_current_condition();
-void s21_clean_condition(condition_t *condition);
+void s21_clean_condition();
+void s21_start_game();
+void s21_move_left();
+void s21_move_right();
+void s21_move_all_down();
+void s21_move_down();
+void s21_turn();
 
 //frontend
 void s21_print_owerlay(GameInfo_t gameInfo);
