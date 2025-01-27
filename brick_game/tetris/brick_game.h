@@ -56,6 +56,22 @@ typedef struct {
   int pause;
 } GameInfo_t;
 
+typedef enum {
+  Start = 0,
+  Spawn,
+  Moving,
+  Shifting,
+  Attaching,
+  GameOver
+} GameStatus_t;
+
+typedef struct condition {
+  matrix_t *field;
+  matrix_t *figure;
+  matrix_t *nextFigure;
+  GameStatus_t status;
+} condition_t;
+
 //matrix functions
 void s21_create_matrix(int rows, int columns, matrix_t *result);
 void s21_remove_matrix(matrix_t *M);

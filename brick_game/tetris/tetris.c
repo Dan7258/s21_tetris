@@ -1,18 +1,18 @@
 #include "brick_game.h"
 
 int main() {
-  setlocale(LC_ALL, "ru_RU.UTF-8");
-  initscr();              
-  cbreak();               
-  noecho();
-  // clear();
-  GameInfo_t gameInfo = {0};
-  gameInfo.score = 123456789;
-  gameInfo.high_score = 123456789;
-  s21_print_owerlay(gameInfo);
-  getch();
-  endwin();
-  // game_loop();
+  // setlocale(LC_ALL, "ru_RU.UTF-8");
+  // initscr();              
+  // cbreak();               
+  // noecho();
+  // // clear();
+  // GameInfo_t gameInfo = {0};
+  // gameInfo.score = 123456789;
+  // gameInfo.high_score = 123456789;
+  // s21_print_owerlay(gameInfo);
+  // getch();
+  // endwin();
+  game_loop();
   return 0;
 }
 
@@ -64,6 +64,14 @@ void game_loop() {
   }
   
 
+}
+
+void s21_init_conditional() {
+  static condition_t condition = {0};
+  s21_create_matrix(ROWS_FIELD, COLS_FIELD, &condition.field->matrix);
+  s21_generate_figure(&condition.figure);
+  s21_generate_figure(&condition.nextFigure);
+  condition.status = Start;
 }
 
 void s21_game_over(matrix_t *field, figure_t *figure, figure_t *nextFigure) {
