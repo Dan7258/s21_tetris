@@ -111,7 +111,9 @@ void s21_generate_figure(figure_t *figure);
 void s21_spawn(matrix_t *field, figure_t *figure, figure_t *nextFigure);
 int s21_moving(matrix_t *field, figure_t *figure, UserAction_t action);
 void s21_shift(matrix_t *field, figure_t *figure, UserAction_t action);
+void s21_init_condition();
 
+//frontend
 void s21_print_owerlay(GameInfo_t gameInfo);
 void s21_print_frame();
 void s21_print_field(GameInfo_t gameInfo);

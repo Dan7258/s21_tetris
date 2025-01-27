@@ -66,12 +66,24 @@ void game_loop() {
 
 }
 
-void s21_init_conditional() {
+void s21_init_condition() {
   static condition_t condition = {0};
   s21_create_matrix(ROWS_FIELD, COLS_FIELD, &condition.field->matrix);
   s21_generate_figure(&condition.figure);
   s21_generate_figure(&condition.nextFigure);
   condition.status = Start;
+}
+
+condition_t *s21_get_current_condition() {
+  static condition_t condition;
+  return &condition;
+}
+
+void s21_update_condition(condition_t *condition) {
+  s21_remove_matrix(condition->field);
+  s21_remove_figure(condition->figure);
+  s21_remove_figure(condition->nextFigure);
+  condition->status = GameOver;
 }
 
 void s21_game_over(matrix_t *field, figure_t *figure, figure_t *nextFigure) {
