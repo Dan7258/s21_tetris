@@ -73,6 +73,7 @@ void userInput(UserAction_t action, bool hold) {
 
   }else if(action == Terminate && condition->status != Init) {
     s21_clean_condition();
+    s21_start_game();
   }else if(action == Left && condition->status == Moving) {
     move_left();
   }else if(action == Right && condition->status == Moving) {
