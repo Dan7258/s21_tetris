@@ -2,15 +2,16 @@
 
 void s21_create_matrix(int rows, int columns, matrix_t *result) {
   if(result == NULL) {
-    printf("aaaaaaaa");
+    printf("bad link\n");
   } else {
     result->rows = rows;
-  result->columns = columns;
-  result->matrix = (int **)malloc(rows * sizeof(int *));
-  for (int i = 0; i < rows; i++) {
-    result->matrix[i] = (int *)calloc(columns, sizeof(int));
+    result->columns = columns;
+    result->matrix = (int **)malloc(rows * sizeof(int *));
+    for (int i = 0; i < rows; i++) {
+      result->matrix[i] = (int *)calloc(columns, sizeof(int));
+    }
   }
-  }
+  
   
 }
 

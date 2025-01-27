@@ -57,13 +57,13 @@ typedef struct {
 } GameInfo_t;
 
 typedef enum {
-  Start = 0,
-  Init,
-  Moving,
-  Attaching,
-  GameOver,
-  Pause,
-  Terminate
+  InitG,
+  StartG,
+  PauseG,
+  TerminateG,
+  MovingG,
+  AttachingG,
+  GameOverG
 } GameStatus_t;
 
 typedef struct condition {
@@ -106,7 +106,7 @@ void s21_game_over();
 // fsm functions
 void userInput(UserAction_t action, bool hold);
 GameInfo_t updateCurrentState();
-
+UserAction_t getAct();
 
 void game_loop();
 void s21_generate_figure(figure_t *figure);

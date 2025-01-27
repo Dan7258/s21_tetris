@@ -2,9 +2,12 @@
 
 void s21_print_owerlay(GameInfo_t gameInfo) {
     s21_print_frame();
+    s21_print_field(gameInfo);
+    // s21_print_next_figure(gameInfo);
     s21_print_high_score(gameInfo);
     s21_print_score(gameInfo);
     s21_print_level(gameInfo);
+    
     refresh();
 }
 
@@ -80,14 +83,13 @@ void s21_print_level(GameInfo_t gameInfo) {
 }
 
 void s21_print_next_figure(GameInfo_t gameInfo) {
-    for(int i = 0; i < ROWS_FIELD; i++) {
-        for(int j = 0; j < COLS_FIELD ; j++) {
-            if(gameInfo.field[i][j]) {
+    for(int i = 0; i < sizeof(gameInfo.next) / sizeof(int); i++) {
+        for(int j = 0; j < sizeof(gameInfo.next[i]) / sizeof(int); j++) {
+            if(gameInfo.next[i][j]) {
                 mvaddch(i + 1, j + 1, ACS_BLOCK);
             } else {
                 mvaddch(i + 1, j + 1, ' ');
             }
-            
         }
     }
 }
