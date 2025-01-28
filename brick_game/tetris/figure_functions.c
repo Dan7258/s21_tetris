@@ -43,8 +43,8 @@ void s21_generate_figure(figure_t *figure) {
 void s21_replace_figure(figure_t *figure, figure_t *nextFigure) {
   s21_remove_figure(figure);
   s21_create_matrix(nextFigure->matrix->rows, nextFigure->matrix->columns, figure->matrix);
-  // s21_copy_matrix(nextFigure->matrix, figure->matrix);
-  figure->matrix = nextFigure->matrix;
+  s21_copy_matrix(nextFigure->matrix, figure->matrix);
+  // figure->matrix = nextFigure->matrix;
   figure->x = nextFigure->x;
   figure->y = nextFigure->y;
 }
@@ -141,7 +141,7 @@ void s21_move_figure_left() {
       if(condition->figure->matrix->matrix[m][n] && n + condition->figure->x - 1 < 0) {
         flag = 0;
       } 
-      if(n + condition->figure->x - 1 > COLS_FIELD - 1) {
+      if(n + condition->figure->x - 1 > COLS_FIELD - 1 || m + condition->figure->y < 0) {
         continue;
       } else if(flag && condition->figure->matrix->matrix[m][n] && condition->field->matrix[m + condition->figure->y][n + condition->figure->x - 1]) {
         flag = 0;
@@ -160,7 +160,7 @@ void s21_move_figure_right() {
       if(condition->figure->matrix->matrix[m][n] && n + condition->figure->x + 1 > COLS_FIELD - 1) {
         flag = 0;
       }
-      if(n + condition->figure->x + 1 < 0) {
+      if(n + condition->figure->x + 1 < 0 || m + condition->figure->y < 0) {
         continue;
       } else if(flag && condition->figure->matrix->matrix[m][n] && condition->field->matrix[m + condition->figure->y][n + condition->figure->x + 1]) {
         flag = 0;
@@ -225,22 +225,25 @@ void s21_remove_figure_on_field() {
 
 int s21_check_and_clear_rows() {
   condition_t *condition = s21_get_current_condition();
-  int f = 0;
+  int f = ROWS_FIELD - 1;
   int counter = 0;
-  for (int m = 0; m < ROWS_FIELD; m++) {
+  for (int m = ROWS_FIELD - 1; m >= 0; m--) {
     if(s21_check_filled_row(m)) {
       counter++;
-      for (;f < ROWS_FIELD && s21_check_filled_row(f); f++) {
-      }
-      for (int n = 0; n < COLS_FIELD; n++) {
-        if(f >= ROWS_FIELD) {
-          condition->field->matrix[m][n] = 0;
+      f = m;
+      for (;f >= 0; f--) {
+        if(f - 1 >= 0) {
+          for (int n = 0; n < COLS_FIELD; n++) {
+            condition->field->matrix[f][n] = condition->field->matrix[f - 1][n];
+          }
         } else {
-          condition->field->matrix[m][n] = condition->field->matrix[f][n];
+          for (int n = 0; n < COLS_FIELD; n++) {
+            condition->field->matrix[f][n] = 0;
+          }
         }
       }
+      m++;
     }
-    f++;
   }
   return counter;
 }
@@ -249,7 +252,16 @@ int s21_check_filled_row(int m) {
   condition_t *condition = s21_get_current_condition();
   int flag = 1;
   for (int n = 0; n < COLS_FIELD && flag; n++) {
-    flag = !(condition->field->matrix[m][n]) ? 0 : flag;
+    flag = (condition->field->matrix[m][n]) ? flag : 0;
+  }
+  return flag;
+}
+
+int s21_check_not_filled_row(int m) {
+  condition_t *condition = s21_get_current_condition();
+  int flag = 1;
+  for (int n = 0; n < COLS_FIELD && flag; n++) {
+    flag = !(condition->field->matrix[m][n]) ? flag : 0;
   }
   return flag;
 }

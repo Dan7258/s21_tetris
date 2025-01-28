@@ -58,7 +58,6 @@ UserAction_t getAct() {
 }
 
 void userInput(UserAction_t action, bool hold) {
-  srand(time(NULL));
   condition_t *condition = s21_get_current_condition();
   if(action == Start && condition->status == InitG) {
     s21_start_game();
@@ -92,6 +91,7 @@ void userInput(UserAction_t action, bool hold) {
 GameInfo_t updateCurrentState() {
   condition_t *condition = s21_get_current_condition();
   if(condition->status == InitG) {
+    srand(time(NULL));
     s21_init_condition();
   }
   GameInfo_t info = {0};
@@ -207,8 +207,8 @@ int s21_check_lose(GameInfo_t info) {
 
 void s21_spawn() {
   condition_t *condition = s21_get_current_condition();
-  // s21_replace_figure(condition->figure, condition->nextFigure);
-  s21_generate_figure(condition->figure);
+  s21_replace_figure(condition->figure, condition->nextFigure);
+  s21_generate_figure(condition->nextFigure);
   condition->status = MovingG;
 }
 

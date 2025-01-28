@@ -39,7 +39,7 @@ void s21_print_field(GameInfo_t gameInfo) {
     for(int i = 0; i < ROWS_FIELD; i++) {
         for(int j = 0; j < COLS_FIELD ; j++) {
             if(gameInfo.field[i][j]) {
-                mvaddch(i + 1, j + 1, ACS_BLOCK);
+                mvaddch(i + 1, j + 1, ACS_CKBOARD);
             } else {
                 mvaddch(i + 1, j + 1, ' ');
             }
