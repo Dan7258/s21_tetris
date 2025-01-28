@@ -100,8 +100,7 @@ void s21_add_figure_on_field();
 void s21_remove_figure_on_field();
 int s21_check_and_clear_rows();
 int s21_check_filled_row(int m);
-int s21_check_not_filled_row(int m);
-int s21_check_lose();
+int s21_check_lose(GameInfo_t info);
 void s21_game_over();
 
 // fsm functions

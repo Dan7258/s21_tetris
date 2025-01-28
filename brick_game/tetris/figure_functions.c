@@ -256,12 +256,3 @@ int s21_check_filled_row(int m) {
   }
   return flag;
 }
-
-int s21_check_not_filled_row(int m) {
-  condition_t *condition = s21_get_current_condition();
-  int flag = 1;
-  for (int n = 0; n < COLS_FIELD && flag; n++) {
-    flag = !(condition->field->matrix[m][n]) ? flag : 0;
-  }
-  return flag;
-}

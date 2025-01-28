@@ -18,8 +18,8 @@ void game_loop() {
   // UserAction_t action = getAct();
   UserAction_t action = Start;
   updateCurrentState();
-  // !s21_check_lose(updateCurrentState())
-  for(;;) {
+  
+  for(;!s21_check_lose(updateCurrentState());) {
     userInput(action, true);
     s21_print_owerlay(updateCurrentState());
     action = getAct();
