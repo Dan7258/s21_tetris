@@ -3,6 +3,8 @@
 
 #define ROWS_FIELD 20
 #define COLS_FIELD 10
+#define ROWS_NEXT 5
+#define COLS_NEXT 5
 #define MAX_LEVEL 10
 
 #include <stdio.h>
@@ -12,6 +14,7 @@
 #include <unistd.h> 
 #include <ncurses.h>
 #include <locale.h>
+#include <stdint.h>
 
 typedef struct matrix {
   int **matrix;
@@ -71,6 +74,8 @@ typedef struct condition {
   figure_t *figure;
   figure_t *nextFigure;
   GameStatus_t status;
+  unsigned long time;
+  unsigned long interval;
 } condition_t;
 
 //matrix functions
@@ -120,6 +125,8 @@ void s21_move_right();
 void s21_move_all_down();
 void s21_move_down();
 void s21_turn();
+int s21_check_end_game(GameInfo_t info);
+unsigned long millis();
 
 //frontend
 void s21_print_owerlay(GameInfo_t gameInfo);

@@ -3,7 +3,7 @@
 void s21_print_owerlay(GameInfo_t gameInfo) {
     s21_print_frame();
     s21_print_field(gameInfo);
-    // s21_print_next_figure(gameInfo);
+    s21_print_next_figure(gameInfo);
     s21_print_high_score(gameInfo);
     s21_print_score(gameInfo);
     s21_print_level(gameInfo);
@@ -77,23 +77,28 @@ void s21_print_score(GameInfo_t gameInfo) {
 void s21_print_level(GameInfo_t gameInfo) {
     char score[] = "level:";
     for(int i = 0; i < 6; i++) {
-        mvaddch(8, i + COLS_FIELD + 2, score[i]);    
+        mvaddch(12, i + COLS_FIELD + 2, score[i]);    
     }
 
     char buffer[20];
     snprintf(buffer, sizeof(buffer), "%d", gameInfo.level);
     for (int i = 0; buffer[i] != '\0'; i++) {
-        mvaddch(9, i + COLS_FIELD + 4, buffer[i]);
+        mvaddch(13, i + COLS_FIELD + 4, buffer[i]);
     }
 }
 
 void s21_print_next_figure(GameInfo_t gameInfo) {
-    for(int i = 0; i < sizeof(gameInfo.next) / sizeof(int); i++) {
-        for(int j = 0; j < sizeof(gameInfo.next[i]) / sizeof(int); j++) {
+    char score[] = "next:";
+    for(int i = 0; i < 5; i++) {
+        mvaddch(8, i + COLS_FIELD + 2, score[i]);    
+    }
+
+    for(int i = 0; i < ROWS_NEXT; i++) {
+        for(int j = 0; j < COLS_NEXT; j++) {
             if(gameInfo.next[i][j]) {
-                mvaddch(i + 1, j + 1, ACS_BLOCK);
+                mvaddch(i + 9, j + COLS_FIELD + 4, ACS_BLOCK);
             } else {
-                mvaddch(i + 1, j + 1, ' ');
+                mvaddch(i + 9, j + COLS_FIELD + 4, ' ');
             }
         }
     }

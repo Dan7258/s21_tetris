@@ -5,7 +5,7 @@ int main() {
   initscr();              
   cbreak();               
   noecho();
-  // nodelay(stdscr, TRUE); 
+  nodelay(stdscr, TRUE); 
   game_loop();
   getch();
   endwin();
@@ -14,12 +14,10 @@ int main() {
 }
 
 void game_loop() {
-  // s21_print_start_menu();
-  // UserAction_t action = getAct();
+  s21_print_start_menu();
   UserAction_t action = Start;
   updateCurrentState();
-  
-  for(;!s21_check_lose(updateCurrentState());) {
+  for(;!s21_check_end_game(updateCurrentState());) {
     userInput(action, true);
     s21_print_owerlay(updateCurrentState());
     action = getAct();
@@ -77,12 +75,24 @@ void userInput(UserAction_t action, bool hold) {
   }
   if(condition->status == MovingG || action == Up) {
     mvprintw(15, 30, "%d", condition->status);
-    s21_move_down();
+    if(millis() - condition->time > condition->interval) {
+      s21_move_down();
+      condition->time = millis();
+    }
+    
   }
   if(condition->status == AttachingG) {
     s21_check_and_clear_rows();
     if(!s21_check_lose(updateCurrentState())) {
       s21_spawn();
+    } else {
+      s21_remove_figure(condition->nextFigure);
+      s21_create_matrix(5, 5, condition->nextFigure->matrix);
+      for(int i = 0; i < ROWS_NEXT; i++) {
+        for(int j = 0; j < COLS_NEXT; j++) {
+          condition->nextFigure->matrix->matrix[i][j] = 0;
+        }
+      }
     }
   }
   mvprintw(15, 30, "%d", condition->status);
@@ -95,11 +105,16 @@ GameInfo_t updateCurrentState() {
     s21_init_condition();
   }
   GameInfo_t info = {0};
-  // if(condition->field == NULL) {
-  //   printf("null field\n");
-  // }
   info.field = condition->field->matrix;
-  info.next = condition->nextFigure->matrix->matrix;
+  info.next = (int **)malloc(ROWS_NEXT * sizeof(int *));
+  for (int i = 0; i < ROWS_NEXT; i++) {
+    info.next[i] = (int *)calloc(COLS_NEXT, sizeof(int));
+  }
+  for(int m = 0; m < condition->nextFigure->matrix-> rows; m++) {
+    for(int n = 0; n < condition->nextFigure->matrix-> columns; n++) {
+      info.next[m][n] = condition->nextFigure->matrix->matrix[m][n];
+    }
+  }
   info.score = 0;
   info.high_score = 0;
   info.level = 0;
@@ -164,6 +179,8 @@ void s21_init_condition() {
   s21_generate_figure(condition->figure);
   s21_generate_figure(condition->nextFigure);
   condition->status = InitG;
+  condition->time = millis();
+  condition->interval = 500;
 }
 
 void s21_start_game() {
@@ -198,7 +215,7 @@ void s21_game_over() {
 int s21_check_lose(GameInfo_t info) {
   int flag = 0;
   for (int m = 0; m < COLS_FIELD && !flag; m++) {
-    if(info.field[0][m]) {
+    if(info.field[0][m]==1) {
       flag = 1;
     }
   }
@@ -212,5 +229,18 @@ void s21_spawn() {
   condition->status = MovingG;
 }
 
+int s21_check_end_game(GameInfo_t info) {
+  int flag = 1;
+  for(int i = 0; i < ROWS_NEXT; i++) {
+    for(int j = 0; j < COLS_NEXT; j++) {
+      if(info.next[i][j]) {
+        flag = 0;
+      }
+    }
+  }
+  return flag;
+}
 
-
+unsigned long millis() {
+  return (unsigned long)(clock() * 1000 / CLOCKS_PER_SEC);
+}
