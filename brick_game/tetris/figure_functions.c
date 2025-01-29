@@ -1,7 +1,6 @@
 #include "brick_game.h"
 
 void s21_create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
-  figure->matrix = (matrix_t *)malloc(sizeof(matrix_t));
   switch (SelectedFigure) {
   case O:
     s21_create_O(figure);
@@ -35,16 +34,20 @@ void s21_remove_figure(figure_t *figure) {
 }
 
 void s21_generate_figure(figure_t *figure) {
+  if(figure == NULL) {
+    printf("figure NULL");
+  }
   s21_remove_figure(figure);
   SelectedFigure_t select = rand() % 6;
+  // figure->matrix = (matrix_t *)malloc(sizeof(matrix_t));
   s21_create_figure(select, figure);
 }
 
 void s21_replace_figure(figure_t *figure, figure_t *nextFigure) {
   s21_remove_figure(figure);
+  // figure->matrix = (matrix_t *)malloc(sizeof(matrix_t));
   s21_create_matrix(nextFigure->matrix->rows, nextFigure->matrix->columns, figure->matrix);
   s21_copy_matrix(nextFigure->matrix, figure->matrix);
-  // figure->matrix = nextFigure->matrix;
   figure->x = nextFigure->x;
   figure->y = nextFigure->y;
 }

@@ -10,9 +10,7 @@ void s21_create_matrix(int rows, int columns, matrix_t *result) {
     for (int i = 0; i < rows; i++) {
       result->matrix[i] = (int *)calloc(columns, sizeof(int));
     }
-  }
-  
-  
+  } 
 }
 
 void s21_remove_matrix(matrix_t *M) {

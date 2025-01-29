@@ -5,7 +5,6 @@ int main() {
   initscr();              
   cbreak();               
   noecho();
-  nodelay(stdscr, TRUE); 
   game_loop();
   getch();
   endwin();
@@ -15,13 +14,29 @@ int main() {
 
 void game_loop() {
   s21_print_start_menu();
-  UserAction_t action = Start;
-  updateCurrentState();
-  for(;!s21_check_end_game(updateCurrentState());) {
+  UserAction_t action = getAct();
+  nodelay(stdscr, TRUE); 
+  GameInfo_t info;
+  info = updateCurrentState();
+  for(;!s21_check_end_game(info);) {
     userInput(action, true);
-    s21_print_owerlay(updateCurrentState());
+    s21_clear_memory(&info);
+    info = updateCurrentState();
+    s21_print_owerlay(info);
     action = getAct();
   }
+  nodelay(stdscr, FALSE); 
+  
+  s21_print_owerlay(info);
+  s21_clear_memory(&info);
+}
+
+void s21_clear_memory(GameInfo_t *info) {
+  for (int m = 0; m < ROWS_NEXT; m++) {
+    free(info->next[m]);
+  }
+  free(info->next);
+  info->next = NULL;
 }
 
 UserAction_t getAct() {

@@ -127,6 +127,7 @@ void s21_move_down();
 void s21_turn();
 int s21_check_end_game(GameInfo_t info);
 unsigned long millis();
+void s21_clear_memory(GameInfo_t *info);
 
 //frontend
 void s21_print_owerlay(GameInfo_t gameInfo);
