@@ -12,7 +12,7 @@ void s21_print_owerlay(GameInfo_t gameInfo) {
 }
 
 void s21_print_start_menu() {
-    mvprintw(5, 5, "press enter"); // Функция mvprintw перемещает курсор и печатает строку
+    mvprintw(5, 5, "press enter");
     refresh();  
 }
 

@@ -72,7 +72,7 @@ int s21_check_and_clear_rows() {
   for (int m = ROWS_FIELD - 1; m >= 0; m--) {
     if(s21_check_filled_row(m)) {
       counter++;
-      for (int f = m;f >= 0; f--) {
+      for (int f = m;f > 0; f--) {
         for (int n = 0; n < COLS_FIELD; n++) {
           condition->field->matrix[f][n] = condition->field->matrix[f - 1][n];
         }
