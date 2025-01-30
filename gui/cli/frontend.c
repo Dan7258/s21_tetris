@@ -1,4 +1,4 @@
-#include "brick_game.h"
+#include "frontend.h"
 
 void s21_print_owerlay(GameInfo_t gameInfo) {
     s21_print_frame();

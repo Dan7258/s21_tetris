@@ -1,4 +1,4 @@
-#include "brick_game.h"
+#include "backend.h"
 
 void s21_create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
   switch (SelectedFigure) {
@@ -29,7 +29,6 @@ void s21_create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
 void s21_remove_figure(figure_t *figure) {
   if(figure->matrix != NULL) {
     s21_remove_matrix(figure->matrix);
-    // figure->matrix = NULL;
   }
 }
 
@@ -39,13 +38,11 @@ void s21_generate_figure(figure_t *figure) {
   }
   s21_remove_figure(figure);
   SelectedFigure_t select = rand() % 6;
-  // figure->matrix = (matrix_t *)malloc(sizeof(matrix_t));
   s21_create_figure(select, figure);
 }
 
 void s21_replace_figure(figure_t *figure, figure_t *nextFigure) {
   s21_remove_figure(figure);
-  // figure->matrix = (matrix_t *)malloc(sizeof(matrix_t));
   s21_create_matrix(nextFigure->matrix->rows, nextFigure->matrix->columns, figure->matrix);
   s21_copy_matrix(nextFigure->matrix, figure->matrix);
   figure->x = nextFigure->x;
@@ -226,36 +223,9 @@ void s21_remove_figure_on_field() {
   }
 }
 
-int s21_check_and_clear_rows() {
+void s21_spawn() {
   condition_t *condition = s21_get_current_condition();
-  int f = ROWS_FIELD - 1;
-  int counter = 0;
-  for (int m = ROWS_FIELD - 1; m >= 0; m--) {
-    if(s21_check_filled_row(m)) {
-      counter++;
-      f = m;
-      for (;f >= 0; f--) {
-        if(f - 1 >= 0) {
-          for (int n = 0; n < COLS_FIELD; n++) {
-            condition->field->matrix[f][n] = condition->field->matrix[f - 1][n];
-          }
-        } else {
-          for (int n = 0; n < COLS_FIELD; n++) {
-            condition->field->matrix[f][n] = 0;
-          }
-        }
-      }
-      m++;
-    }
-  }
-  return counter;
-}
-
-int s21_check_filled_row(int m) {
-  condition_t *condition = s21_get_current_condition();
-  int flag = 1;
-  for (int n = 0; n < COLS_FIELD && flag; n++) {
-    flag = (condition->field->matrix[m][n]) ? flag : 0;
-  }
-  return flag;
+  s21_replace_figure(condition->figure, condition->nextFigure);
+  s21_generate_figure(condition->nextFigure);
+  condition->status = MovingG;
 }

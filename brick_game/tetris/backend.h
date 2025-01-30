@@ -1,20 +1,10 @@
-#ifndef BRICK_GAME_H
-#define BRICK_GAME_H
+#ifndef BACKEND_H
+#define BACKEND_H
 
-#define ROWS_FIELD 20
-#define COLS_FIELD 10
-#define ROWS_NEXT 5
-#define COLS_NEXT 5
-#define MAX_LEVEL 10
-
+#include "../../tetris.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <time.h>
-#include <unistd.h> 
-#include <ncurses.h>
-#include <locale.h>
-#include <stdint.h>
 
 typedef struct matrix {
   int **matrix;
@@ -37,27 +27,6 @@ typedef enum {
   J,
   T
 } SelectedFigure_t;
-
-typedef enum {
-  Start,
-  Pause,
-  Terminate,
-  Left,
-  Right,
-  Up,
-  Down,
-  Action
-} UserAction_t;
-
-typedef struct {
-  int **field;
-  int **next;
-  int score;
-  int high_score;
-  int level;
-  int speed;
-  int pause;
-} GameInfo_t;
 
 typedef enum {
   InitG,
@@ -103,40 +72,21 @@ void s21_move_figure_all_down();
 void s21_turn_figure();
 void s21_add_figure_on_field();
 void s21_remove_figure_on_field();
+void s21_spawn();
+
+//fsm functions
 int s21_check_and_clear_rows();
 int s21_check_filled_row(int m);
-int s21_check_lose(GameInfo_t info);
-void s21_game_over();
-
-// fsm functions
-void userInput(UserAction_t action, bool hold);
-GameInfo_t updateCurrentState();
-UserAction_t getAct();
-
-void game_loop();
-void s21_generate_figure(figure_t *figure);
-void s21_spawn();
-void s21_init_condition();
-condition_t *s21_get_current_condition();
-void s21_clean_condition();
-void s21_start_game();
 void s21_move_left();
 void s21_move_right();
 void s21_move_all_down();
 void s21_move_down();
 void s21_turn();
-int s21_check_end_game(GameInfo_t info);
+void s21_init_condition();
+void s21_start_game();
+condition_t *s21_get_current_condition();
+void s21_clean_condition();
+void s21_game_over();
+int s21_check_lose();
 unsigned long millis();
-void s21_clear_memory(GameInfo_t *info);
-
-//frontend
-void s21_print_owerlay(GameInfo_t gameInfo);
-void s21_print_frame();
-void s21_print_field(GameInfo_t gameInfo);
-void s21_print_next_figure(GameInfo_t gameInfo);
-void s21_print_score(GameInfo_t gameInfo);
-void s21_print_high_score(GameInfo_t gameInfo);
-void s21_print_level(GameInfo_t gameInfo);
-void s21_print_start_menu();
-
 #endif
