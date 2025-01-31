@@ -15,7 +15,17 @@ void s21_print_owerlay(GameInfo_t gameInfo) {
 }
 
 void s21_print_start_menu() {
-  mvprintw(5, 5, "press enter");
+  mvprintw(2, 8, "TETRIS");
+  mvprintw(4, 3, "Press \"Enter\" to");
+  mvprintw(5, 4, "start the game");
+  mvprintw(7, 10, "OR");
+  mvprintw(9, 5, "Press \"Q\" to");
+  mvprintw(10, 5, "exit the game");
+  s21_print_field_frame();
+  s21_print_info_frame();
+  s21_print_buttons_frame();
+  s21_print_buttons();
+  mvaddch(0, COLS_FIELD * 2 + 13, ' ');
   refresh();
 }
 
@@ -72,56 +82,35 @@ void s21_print_field(GameInfo_t gameInfo) {
 }
 
 void s21_print_high_score(GameInfo_t gameInfo) {
-  char score[] = "record:";
-  for (int i = 0; i < 7; i++) {
-    mvaddch(2, i + COLS_FIELD * 2 + 3, score[i]);
-  }
-
   char buffer[20];
-  snprintf(buffer, sizeof(buffer), "%d", gameInfo.high_score);
-  for (int i = 0; buffer[i] != '\0'; i++) {
-    mvaddch(3, i + COLS_FIELD * 2 + 4, buffer[i]);
-  }
+  mvaddstr(2, COLS_FIELD * 2 + 3, "record:");
+  sprintf(buffer, "%d", gameInfo.high_score);
+  mvaddstr(3, COLS_FIELD * 2 + 4, buffer);
 }
 
 void s21_print_score(GameInfo_t gameInfo) {
-  char score[] = "score:";
-  for (int i = 0; i < 6; i++) {
-    mvaddch(5, i + COLS_FIELD * 2 + 3, score[i]);
-  }
-
   char buffer[20];
-  snprintf(buffer, sizeof(buffer), "%d", gameInfo.score);
-  for (int i = 0; buffer[i] != '\0'; i++) {
-    mvaddch(6, i + COLS_FIELD * 2 + 4, buffer[i]);
-  }
+  mvaddstr(5, COLS_FIELD * 2 + 3, "score:");
+  sprintf(buffer, "%d", gameInfo.score);
+  mvaddstr(6, COLS_FIELD * 2 + 4, buffer);
 }
 
 void s21_print_level(GameInfo_t gameInfo) {
-  char score[] = "level:";
-  for (int i = 0; i < 6; i++) {
-    mvaddch(12, i + COLS_FIELD * 2 + 3, score[i]);
-  }
-
   char buffer[20];
-  snprintf(buffer, sizeof(buffer), "%d", gameInfo.level);
-  for (int i = 0; buffer[i] != '\0'; i++) {
-    mvaddch(13, i + COLS_FIELD * 2 + 4, buffer[i]);
-  }
+  mvaddstr(7, COLS_FIELD * 2 + 3, "level:");
+  sprintf(buffer, "%d", gameInfo.level);
+  mvaddstr(8, COLS_FIELD * 2 + 4, buffer);
 }
 
 void s21_print_next_figure(GameInfo_t gameInfo) {
-  char score[] = "next:";
-  for (int i = 0; i < 5; i++) {
-    mvaddch(8, i + COLS_FIELD * 2 + 3, score[i]);
-  }
+  mvaddstr(9, COLS_FIELD * 2 + 3, "next:");
 
   for (int i = 0; i < ROWS_NEXT; i++) {
     for (int j = 0; j < COLS_NEXT; j++) {
       if (gameInfo.next[i][j]) {
-        mvaddch(i + 9, j + COLS_FIELD * 2 + 4, ACS_BLOCK);
+        mvaddch(i + 10, j + COLS_FIELD * 2 + 4, ACS_BLOCK);
       } else {
-        mvaddch(i + 9, j + COLS_FIELD * 2 + 4, ' ');
+        mvaddch(i + 10, j + COLS_FIELD * 2 + 4, ' ');
       }
     }
   }
