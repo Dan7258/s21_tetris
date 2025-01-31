@@ -16,5 +16,6 @@ void s21_print_level(GameInfo_t gameInfo);
 void s21_print_buttons_frame();
 void s21_print_buttons();
 void s21_print_start_menu();
+void s21_print_pause_menu();
 
 #endif

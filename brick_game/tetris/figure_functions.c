@@ -37,7 +37,7 @@ void s21_generate_figure(figure_t *figure) {
     printf("figure NULL");
   }
   s21_remove_figure(figure);
-  SelectedFigure_t select = rand() % 6;
+  SelectedFigure_t select = rand() % 7;
   s21_create_figure(select, figure);
 }
 

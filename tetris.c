@@ -6,6 +6,7 @@ int main() {
   initscr();              
   cbreak();               
   noecho();
+  keypad(stdscr, TRUE);
   game_loop();
   getch();
   endwin();
@@ -14,22 +15,39 @@ int main() {
 }
 
 void game_loop() {
-  s21_print_start_menu();
-  UserAction_t action = getAct();
-  nodelay(stdscr, TRUE); 
+  UserAction_t action;
   GameInfo_t info;
-  info = updateCurrentState();
-  for(;!s21_check_end_game(info);) {
-    userInput(action, true);
-    s21_clear_memory(&info);
-    info = updateCurrentState();
-    s21_print_owerlay(info);
-    action = getAct();
+  int flag = 1;
+  for(;;) {
+    s21_print_start_menu();
+    int ch = getch();
+    if(ch == KEY_BACKSPACE) {
+      flag = 0;
+    }
+    if(ch == 10) {
+      action = Start;
+      flag = 1;
+    }
+    if(ch == 10 || ch == KEY_BACKSPACE) {
+      break;
+    }
+
   }
-  nodelay(stdscr, FALSE); 
+  if(flag) {
+    nodelay(stdscr, TRUE); 
+    info = updateCurrentState();
+    for(;!s21_check_end_game(info);) {
+      userInput(action, true);
+      s21_clear_memory(&info);
+      info = updateCurrentState();
+      s21_print_owerlay(info);
+      action = getAct();
+    }
+    nodelay(stdscr, FALSE); 
+    s21_print_owerlay(info);
+    s21_clear_memory(&info);
+  }
   
-  s21_print_owerlay(info);
-  s21_clear_memory(&info);
 }
 
 void s21_clear_memory(GameInfo_t *info) {
@@ -42,27 +60,31 @@ void s21_clear_memory(GameInfo_t *info) {
 
 UserAction_t getAct() {
   UserAction_t action;
-  switch (getch()) {
+  int ch = getch();
+  switch (ch) {
   case 10:
     action = Start;
     break;
   case 27:
     action = Pause;
     break;
-  case 'w':
+  case KEY_UP:
     action = Up;
     break;
-  case 'a':
+  case KEY_LEFT:
     action = Left;
     break;
-  case 'd':
+  case KEY_RIGHT:
     action = Right;
     break;
-  case 's':
+  case KEY_DOWN:
     action = Down;
     break;
   case 32:
     action = Action;
+    break;
+  case KEY_BACKSPACE:
+    action = Terminate;
     break;
   default:
     action = Up;

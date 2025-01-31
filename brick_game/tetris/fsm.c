@@ -5,7 +5,13 @@ void userInput(UserAction_t action, bool hold) {
   if(action == Start && condition->status == InitG) {
     s21_start_game();
   } else if(action == Pause && condition->status != InitG) {
-
+    if(condition->status == PauseG) {
+      condition->status = MovingG;
+      nodelay(stdscr, TRUE);
+    } else if(condition->status != PauseG) {
+      condition->status = PauseG;
+      nodelay(stdscr, FALSE); 
+    }
   }else if(action == Terminate && condition->status != InitG) {
     s21_clean_condition();
     s21_start_game();
@@ -62,7 +68,8 @@ GameInfo_t updateCurrentState() {
   info.high_score = 0;
   info.level = 0;
   info.speed = 0;
-  info.pause = 0;
+  info.pause = condition->status == PauseG ? 1 : 0;
+  
   return info;
 }
 

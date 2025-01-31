@@ -10,6 +10,9 @@ void s21_print_owerlay(GameInfo_t gameInfo) {
   s21_print_level(gameInfo);
   s21_print_buttons_frame();
   s21_print_buttons();
+  if(gameInfo.pause) {
+    s21_print_pause_menu();
+  }
   mvaddch(0, COLS_FIELD * 2 + 13, ' ');
   refresh();
 }
@@ -19,8 +22,26 @@ void s21_print_start_menu() {
   mvprintw(4, 3, "Press \"Enter\" to");
   mvprintw(5, 4, "start the game");
   mvprintw(7, 10, "OR");
-  mvprintw(9, 5, "Press \"Q\" to");
-  mvprintw(10, 5, "exit the game");
+  mvprintw(9, 2, "Press \"Terminate\"");
+  mvprintw(10, 2, "to exit the game");
+  s21_print_field_frame();
+  s21_print_info_frame();
+  s21_print_buttons_frame();
+  s21_print_buttons();
+  mvaddch(0, COLS_FIELD * 2 + 13, ' ');
+  refresh();
+}
+
+void s21_print_pause_menu() {
+  mvprintw(2, 8, "PAUSE");
+  mvprintw(4, 3, "Press \"Escape\" to");
+  mvprintw(5, 4, "continue the game");
+  mvprintw(7, 10, "OR");
+  mvprintw(9, 2, "Press \"Terminate\"");
+  mvprintw(10, 2, "to exit the game");
+  mvprintw(12, 10, "OR");
+  mvprintw(14, 3, "Press \"Enter\"");
+  mvprintw(15, 2, "to restart the game");
   s21_print_field_frame();
   s21_print_info_frame();
   s21_print_buttons_frame();
