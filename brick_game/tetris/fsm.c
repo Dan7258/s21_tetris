@@ -63,12 +63,7 @@ GameInfo_t updateCurrentState() {
   info.pause = condition->status == PauseG ? 1 : 0;
   if(condition->status == GameOverG) {
     s21_clean_condition();
-  }
-  if(info.next == NULL) {
-    mvprintw(4, 45, "next null");
-    refresh();
-  }
-  
+  }  
   return info;
 }
 
@@ -162,10 +157,14 @@ void s21_init_condition() {
 
 void s21_start_game() {
   condition_t *condition = s21_get_current_condition();
+  
   if(condition->status == PauseG) {
     s21_remove_matrix(condition->field);
     condition->status = InitG;
-  }
+  } 
+  // if(condition->status == GameOverG) {
+  //   condition->status = InitG;
+  // }
   if(condition->field == NULL) {
     s21_init_condition();
     srand(time(NULL));
@@ -186,16 +185,22 @@ condition_t *s21_get_current_condition() {
 void s21_clean_condition() {
   condition_t *condition = s21_get_current_condition();
   s21_remove_matrix(condition->field);
+  free(condition->field);
   condition->field = NULL;
   s21_remove_figure(condition->figure);
+  free(condition->figure->matrix);
+  free(condition->figure);
   condition->figure->matrix = NULL;
   condition->figure = NULL;
   s21_remove_figure(condition->nextFigure);
+  free(condition->nextFigure->matrix);
+  free(condition->nextFigure);
   condition->nextFigure->matrix = NULL;
   condition->nextFigure = NULL;
   condition->interval = 0;
   condition->status = GameOverG;
   condition->time = 0;
+  condition = NULL;
 }
 
 void s21_game_over() {

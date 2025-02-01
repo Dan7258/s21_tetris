@@ -8,7 +8,6 @@ int main() {
   noecho();
   keypad(stdscr, TRUE);
   game_loop();
-  getch();
   endwin();
   
   return 0;
@@ -41,7 +40,17 @@ void game_loop() {
       info = updateCurrentState();
       s21_print_owerlay(info);
       if(s21_check_end_game(info)) {
-        break;
+        s21_print_game_over_menu(info);
+        s21_clear_memory(&info);
+        int ch;
+        for(;ch != 10 && ch != KEY_BACKSPACE; ch = getch()) {
+        }
+        if(ch == KEY_BACKSPACE) {
+          break;
+        } else if(ch == 10) {
+          action = Start;
+          continue;
+        }
       }
       preaction = action;
       action = getAct();
@@ -53,8 +62,6 @@ void game_loop() {
       s21_clear_memory(&info);
     }
     nodelay(stdscr, FALSE); 
-    s21_print_game_over_menu(info);
-    s21_clear_memory(&info);
   }
   
 }
