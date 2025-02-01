@@ -32,7 +32,6 @@ typedef enum {
   InitG,
   StartG,
   PauseG,
-  TerminateG,
   MovingG,
   AttachingG,
   GameOverG

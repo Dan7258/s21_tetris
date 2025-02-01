@@ -41,7 +41,6 @@ void game_loop() {
       info = updateCurrentState();
       s21_print_owerlay(info);
       if(s21_check_end_game(info)) {
-        s21_clear_memory(&info);
         break;
       }
       preaction = action;
@@ -54,13 +53,18 @@ void game_loop() {
       s21_clear_memory(&info);
     }
     nodelay(stdscr, FALSE); 
-    s21_print_owerlay(info);
+    s21_print_game_over_menu(info);
     s21_clear_memory(&info);
   }
   
 }
 
 void s21_clear_memory(GameInfo_t *info) {
+  for (int m = 0; m < ROWS_FIELD; m++) {
+    free(info->field[m]);
+  }
+  free(info->field);
+  info->field = NULL;
   for (int m = 0; m < ROWS_NEXT; m++) {
     free(info->next[m]);
   }

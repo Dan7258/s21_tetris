@@ -7,7 +7,7 @@ void userInput(UserAction_t action, bool hold) {
   } else if(action == Pause && condition->status != InitG) {
     condition->status = condition->status == PauseG ? MovingG : PauseG;
   }else if(action == Terminate && condition->status == PauseG) {
-    s21_clean_condition();
+    s21_game_over();
   }else if(action == Left && condition->status == MovingG) {
     s21_move_left();
   }else if(action == Right && condition->status == MovingG) {
@@ -37,6 +37,16 @@ GameInfo_t updateCurrentState() {
   condition_t *condition = s21_get_current_condition();
   GameInfo_t info = {0};
   info.field = condition->field->matrix;
+  info.field = (int **)malloc(ROWS_FIELD * sizeof(int *));
+  for (int i = 0; i < ROWS_FIELD; i++) {
+    info.field[i] = (int *)calloc(COLS_FIELD, sizeof(int));
+  }
+  for(int m = 0; m < ROWS_FIELD; m++) {
+    for(int n = 0; n < COLS_FIELD; n++) {
+      info.field[m][n] = condition->field->matrix[m][n];
+    }
+  }
+  
   info.next = (int **)malloc(ROWS_NEXT * sizeof(int *));
   for (int i = 0; i < ROWS_NEXT; i++) {
     info.next[i] = (int *)calloc(COLS_NEXT, sizeof(int));
@@ -51,6 +61,13 @@ GameInfo_t updateCurrentState() {
   info.level = 0;
   info.speed = 0;
   info.pause = condition->status == PauseG ? 1 : 0;
+  if(condition->status == GameOverG) {
+    s21_clean_condition();
+  }
+  if(info.next == NULL) {
+    mvprintw(4, 45, "next null");
+    refresh();
+  }
   
   return info;
 }
@@ -169,17 +186,21 @@ condition_t *s21_get_current_condition() {
 void s21_clean_condition() {
   condition_t *condition = s21_get_current_condition();
   s21_remove_matrix(condition->field);
+  condition->field = NULL;
   s21_remove_figure(condition->figure);
+  condition->figure->matrix = NULL;
+  condition->figure = NULL;
   s21_remove_figure(condition->nextFigure);
-  condition->interval = 500;
-  condition->status = InitG;
-  condition->time = millis();
+  condition->nextFigure->matrix = NULL;
+  condition->nextFigure = NULL;
+  condition->interval = 0;
+  condition->status = GameOverG;
+  condition->time = 0;
 }
 
 void s21_game_over() {
   condition_t *condition = s21_get_current_condition();
-  // int score = condition->score;
-  s21_clean_condition();
+  s21_remove_matrix(condition->nextFigure->matrix);
   s21_create_matrix(5, 5, condition->nextFigure->matrix);
   for(int i = 0; i < ROWS_NEXT; i++) {
     for(int j = 0; j < COLS_NEXT; j++) {

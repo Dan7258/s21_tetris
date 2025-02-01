@@ -27,7 +27,7 @@ void s21_create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
 }
 
 void s21_remove_figure(figure_t *figure) {
-  if(figure->matrix != NULL) {
+  if(figure != NULL && figure->matrix != NULL) {
     s21_remove_matrix(figure->matrix);
   }
 }
