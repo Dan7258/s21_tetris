@@ -34,11 +34,14 @@ void s21_remove_figure(figure_t *figure) {
 
 void s21_generate_figure(figure_t *figure) {
   if(figure == NULL) {
-    printf("figure NULL");
+    mvprintw(4, 45, "figure NULL");
+    refresh();
+  } else {
+    s21_remove_figure(figure);
+    SelectedFigure_t select = rand() % 7;
+    s21_create_figure(select, figure);
   }
-  s21_remove_figure(figure);
-  SelectedFigure_t select = rand() % 7;
-  s21_create_figure(select, figure);
+  
 }
 
 void s21_replace_figure(figure_t *figure, figure_t *nextFigure) {

@@ -1,6 +1,10 @@
 #include "frontend.h"
 
 void s21_print_owerlay(GameInfo_t gameInfo) {
+  if(gameInfo.field == NULL || gameInfo.next == NULL) {
+    mvaddstr(3,46,"nulll");
+    refresh();
+  }
   s21_print_field_frame();
   s21_print_field(gameInfo);
   s21_print_info_frame();
@@ -18,12 +22,12 @@ void s21_print_owerlay(GameInfo_t gameInfo) {
 }
 
 void s21_print_start_menu() {
-  mvprintw(2, 8, "TETRIS");
-  mvprintw(4, 3, "Press \"Enter\" to");
-  mvprintw(5, 4, "start the game");
-  mvprintw(7, 10, "OR");
-  mvprintw(9, 2, "Press \"Terminate\"");
-  mvprintw(10, 2, "to exit the game");
+  mvaddstr(2, 8, "TETRIS");
+  mvaddstr(4, 3, "Press \"Enter\" to");
+  mvaddstr(5, 4, "start the game");
+  mvaddstr(7, 10, "OR");
+  mvaddstr(9, 2, "Press \"Terminate\"");
+  mvaddstr(10, 2, "to exit the game");
   s21_print_field_frame();
   s21_print_info_frame();
   s21_print_buttons_frame();
@@ -33,15 +37,31 @@ void s21_print_start_menu() {
 }
 
 void s21_print_pause_menu() {
-  mvprintw(2, 8, "PAUSE");
-  mvprintw(4, 3, "Press \"Escape\" to");
-  mvprintw(5, 4, "continue the game");
-  mvprintw(7, 10, "OR");
-  mvprintw(9, 2, "Press \"Terminate\"");
-  mvprintw(10, 2, "to exit the game");
-  mvprintw(12, 10, "OR");
-  mvprintw(14, 3, "Press \"Enter\"");
-  mvprintw(15, 2, "to restart the game");
+  mvaddstr(2, 8, "PAUSE");
+  mvaddstr(4, 3, "Press \"Escape\" to");
+  mvaddstr(5, 4, "continue the game");
+  mvaddstr(7, 10, "OR");
+  mvaddstr(9, 2, "Press \"Terminate\"");
+  mvaddstr(10, 2, "to exit the game");
+  mvaddstr(12, 10, "OR");
+  mvaddstr(14, 3, "Press \"Enter\"");
+  mvaddstr(15, 2, "to restart the game");
+  s21_print_field_frame();
+  s21_print_info_frame();
+  s21_print_buttons_frame();
+  s21_print_buttons();
+  mvaddch(0, COLS_FIELD * 2 + 13, ' ');
+  refresh();
+}
+
+void s21_print_game_over_menu(GameInfo_t gameInfo) {
+  mvaddstr(2, 8, "GAME OVER");
+  mvprintw(4,2, "Your score: %d", gameInfo.score);
+  mvaddstr(9, 2, "Press \"Terminate\"");
+  mvaddstr(10, 2, "to exit the game");
+  mvaddstr(12, 10, "OR");
+  mvaddstr(14, 3, "Press \"Enter\"");
+  mvaddstr(15, 2, "to restart the game");
   s21_print_field_frame();
   s21_print_info_frame();
   s21_print_buttons_frame();

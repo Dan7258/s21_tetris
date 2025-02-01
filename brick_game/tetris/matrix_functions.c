@@ -1,12 +1,18 @@
 #include "backend.h"
 
 void s21_create_matrix(int rows, int columns, matrix_t *result) {
-  result->rows = rows;
-  result->columns = columns;
-  result->matrix = (int **)malloc(rows * sizeof(int *));
-  for (int i = 0; i < rows; i++) {
-    result->matrix[i] = (int *)calloc(columns, sizeof(int));
-  } 
+  if(result == NULL) {
+    mvprintw(4, 46, "result NULL");
+    refresh();
+  } else {
+    result->rows = rows;
+    result->columns = columns;
+    result->matrix = (int **)malloc(rows * sizeof(int *));
+    for (int i = 0; i < rows; i++) {
+      result->matrix[i] = (int *)calloc(columns, sizeof(int));
+    }
+  }
+   
 }
 
 void s21_remove_matrix(matrix_t *M) {

@@ -45,6 +45,7 @@ typedef struct condition {
   GameStatus_t status;
   unsigned long time;
   unsigned long interval;
+  int score;
 } condition_t;
 
 //matrix functions

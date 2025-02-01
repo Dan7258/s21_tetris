@@ -2,19 +2,12 @@
 
 void userInput(UserAction_t action, bool hold) {
   condition_t *condition = s21_get_current_condition();
-  if(action == Start && condition->status == InitG) {
+  if(action == Start) {
     s21_start_game();
   } else if(action == Pause && condition->status != InitG) {
-    if(condition->status == PauseG) {
-      condition->status = MovingG;
-      nodelay(stdscr, TRUE);
-    } else if(condition->status != PauseG) {
-      condition->status = PauseG;
-      nodelay(stdscr, FALSE); 
-    }
-  }else if(action == Terminate && condition->status != InitG) {
+    condition->status = condition->status == PauseG ? MovingG : PauseG;
+  }else if(action == Terminate && condition->status == PauseG) {
     s21_clean_condition();
-    s21_start_game();
   }else if(action == Left && condition->status == MovingG) {
     s21_move_left();
   }else if(action == Right && condition->status == MovingG) {
@@ -28,31 +21,20 @@ void userInput(UserAction_t action, bool hold) {
     if(millis() - condition->time > condition->interval) {
       s21_move_down();
       condition->time = millis();
-    }
-    
+    } 
   }
   if(condition->status == AttachingG) {
     s21_check_and_clear_rows();
     if(!s21_check_lose()) {
       s21_spawn();
     } else {
-      s21_remove_figure(condition->nextFigure);
-      s21_create_matrix(5, 5, condition->nextFigure->matrix);
-      for(int i = 0; i < ROWS_NEXT; i++) {
-        for(int j = 0; j < COLS_NEXT; j++) {
-          condition->nextFigure->matrix->matrix[i][j] = 0;
-        }
-      }
+      s21_game_over();
     }
   }
 }
 
 GameInfo_t updateCurrentState() {
   condition_t *condition = s21_get_current_condition();
-  if(condition->status == InitG) {
-    srand(time(NULL));
-    s21_init_condition();
-  }
   GameInfo_t info = {0};
   info.field = condition->field->matrix;
   info.next = (int **)malloc(ROWS_NEXT * sizeof(int *));
@@ -163,10 +145,20 @@ void s21_init_condition() {
 
 void s21_start_game() {
   condition_t *condition = s21_get_current_condition();
-  s21_create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
-  s21_generate_figure(condition->figure);
-  s21_generate_figure(condition->nextFigure);
-  condition->status = MovingG;
+  if(condition->status == PauseG) {
+    s21_remove_matrix(condition->field);
+    condition->status = InitG;
+  }
+  if(condition->field == NULL) {
+    s21_init_condition();
+    srand(time(NULL));
+  }
+  if(condition->status == InitG) {
+    s21_create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
+    s21_generate_figure(condition->figure);
+    s21_generate_figure(condition->nextFigure);
+    condition->status = MovingG;
+  }
 }
 
 condition_t *s21_get_current_condition() {
@@ -179,14 +171,21 @@ void s21_clean_condition() {
   s21_remove_matrix(condition->field);
   s21_remove_figure(condition->figure);
   s21_remove_figure(condition->nextFigure);
-  condition->status = MovingG;
+  condition->interval = 500;
+  condition->status = InitG;
+  condition->time = millis();
 }
 
 void s21_game_over() {
   condition_t *condition = s21_get_current_condition();
-  s21_remove_matrix(condition->field);
-  s21_remove_figure(condition->figure);
-  s21_remove_figure(condition->nextFigure);
+  // int score = condition->score;
+  s21_clean_condition();
+  s21_create_matrix(5, 5, condition->nextFigure->matrix);
+  for(int i = 0; i < ROWS_NEXT; i++) {
+    for(int j = 0; j < COLS_NEXT; j++) {
+      condition->nextFigure->matrix->matrix[i][j] = 0;
+    }
+  }
   condition->status = GameOverG;
 }
 

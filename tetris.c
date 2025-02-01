@@ -16,6 +16,7 @@ int main() {
 
 void game_loop() {
   UserAction_t action;
+  UserAction_t preaction;
   GameInfo_t info;
   int flag = 1;
   for(;;) {
@@ -35,13 +36,22 @@ void game_loop() {
   }
   if(flag) {
     nodelay(stdscr, TRUE); 
-    info = updateCurrentState();
-    for(;!s21_check_end_game(info);) {
+    for(;;) {
       userInput(action, true);
-      s21_clear_memory(&info);
       info = updateCurrentState();
       s21_print_owerlay(info);
+      if(s21_check_end_game(info)) {
+        s21_clear_memory(&info);
+        break;
+      }
+      preaction = action;
       action = getAct();
+      if(action == Pause && preaction != Pause) {
+        nodelay(stdscr, FALSE);
+      } else {
+        nodelay(stdscr, TRUE);
+      }
+      s21_clear_memory(&info);
     }
     nodelay(stdscr, FALSE); 
     s21_print_owerlay(info);
