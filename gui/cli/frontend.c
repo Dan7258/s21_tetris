@@ -1,12 +1,11 @@
 #include "frontend.h"
 
 void s21_print_owerlay(GameInfo_t gameInfo) {
-  if (gameInfo.field == NULL || gameInfo.next == NULL) {
-    mvaddstr(3, 46, "nulll");
-    refresh();
+  s21_print_field(gameInfo);
+  if (gameInfo.pause) {
+    s21_print_pause_menu();
   }
   s21_print_field_frame();
-  s21_print_field(gameInfo);
   s21_print_info_frame();
   s21_print_next_figure(gameInfo);
   s21_print_high_score(gameInfo);
@@ -14,9 +13,6 @@ void s21_print_owerlay(GameInfo_t gameInfo) {
   s21_print_level(gameInfo);
   s21_print_buttons_frame();
   s21_print_buttons();
-  if (gameInfo.pause) {
-    s21_print_pause_menu();
-  }
   mvaddch(0, COLS_FIELD * 2 + 13, ' ');
   refresh();
 }
@@ -37,6 +33,7 @@ void s21_print_start_menu() {
 }
 
 void s21_print_pause_menu() {
+  s21_clear_field();
   mvaddstr(2, 8, "PAUSE");
   mvaddstr(4, 3, "Press \"Escape\" to");
   mvaddstr(5, 4, "continue the game");
@@ -54,7 +51,17 @@ void s21_print_pause_menu() {
   refresh();
 }
 
+void s21_clear_field() {
+  for (int i = 0; i < ROWS_FIELD; i++) {
+    for (int j = 0; j < COLS_FIELD; j++) {
+      mvaddch(i + 1, j * 2 + 1, ' ');
+      mvaddch(i + 1, j * 2 + 2, ' ');
+    }
+  }
+}
+
 void s21_print_game_over_menu(GameInfo_t gameInfo) {
+  s21_clear_field();
   mvaddstr(2, 8, "GAME OVER");
   mvprintw(4, 2, "Your score: %d", gameInfo.score);
   mvaddstr(9, 2, "Press \"Terminate\"");

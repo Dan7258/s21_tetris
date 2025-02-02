@@ -19,5 +19,5 @@ void s21_print_buttons();
 void s21_print_start_menu();
 void s21_print_pause_menu();
 void s21_print_game_over_menu(GameInfo_t gameInfo);
-
+void s21_clear_field();
 #endif

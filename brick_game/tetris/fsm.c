@@ -20,13 +20,13 @@ void userInput(UserAction_t action, bool hold) {
     s21_turn();
   }
 
-  if (condition->status == MovingG || action == Up) {
+  if (action != Pause && (condition->status == MovingG || action == Up)) {
     if (millis() - condition->time > condition->interval) {
       s21_move_down();
       condition->time = millis();
     }
   }
-  if (condition->status == AttachingG) {
+  if (action != Pause && condition->status == AttachingG) {
     s21_check_and_clear_rows();
     if (!s21_check_lose()) {
       s21_spawn();
@@ -39,7 +39,6 @@ void userInput(UserAction_t action, bool hold) {
 GameInfo_t updateCurrentState() {
   condition_t *condition = s21_get_current_condition();
   GameInfo_t info = {0};
-  info.field = condition->field->matrix;
   info.field = (int **)malloc(ROWS_FIELD * sizeof(int *));
   for (int i = 0; i < ROWS_FIELD; i++) {
     info.field[i] = (int *)calloc(COLS_FIELD, sizeof(int));
