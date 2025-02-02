@@ -34,6 +34,7 @@ typedef enum {
   PauseG,
   MovingG,
   AttachingG,
+  TerminateG,
   GameOverG
 } GameStatus_t;
 

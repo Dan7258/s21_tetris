@@ -8,7 +8,9 @@ void userInput(UserAction_t action, bool hold) {
     condition->status = condition->status == PauseG ? MovingG : PauseG;
   }else if(action == Terminate && condition->status == PauseG) {
     s21_game_over();
-  }else if(action == Left && condition->status == MovingG) {
+  } else if(action == Terminate && condition->status == GameOverG) {
+    s21_clean_condition();
+  } else if(action == Left && condition->status == MovingG) {
     s21_move_left();
   }else if(action == Right && condition->status == MovingG) {
     s21_move_right();
@@ -17,6 +19,7 @@ void userInput(UserAction_t action, bool hold) {
   } else if(action == Action && condition->status == MovingG) {
     s21_turn();
   }
+  
   if(condition->status == MovingG || action == Up) {
     if(millis() - condition->time > condition->interval) {
       s21_move_down();
@@ -61,9 +64,6 @@ GameInfo_t updateCurrentState() {
   info.level = 0;
   info.speed = 0;
   info.pause = condition->status == PauseG ? 1 : 0;
-  if(condition->status == GameOverG) {
-    s21_clean_condition();
-  }  
   return info;
 }
 
@@ -158,13 +158,10 @@ void s21_init_condition() {
 void s21_start_game() {
   condition_t *condition = s21_get_current_condition();
   
-  if(condition->status == PauseG) {
+  if(condition->status == PauseG || condition->status == GameOverG) {
     s21_remove_matrix(condition->field);
     condition->status = InitG;
   } 
-  // if(condition->status == GameOverG) {
-  //   condition->status = InitG;
-  // }
   if(condition->field == NULL) {
     s21_init_condition();
     srand(time(NULL));

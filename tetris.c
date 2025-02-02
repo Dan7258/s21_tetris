@@ -42,24 +42,26 @@ void game_loop() {
       if(s21_check_end_game(info)) {
         s21_print_game_over_menu(info);
         s21_clear_memory(&info);
-        int ch;
-        for(;ch != 10 && ch != KEY_BACKSPACE; ch = getch()) {
-        }
-        if(ch == KEY_BACKSPACE) {
+        preaction = action;
+        action = Up;
+        for(;action != Start && action != Terminate; action = getAct()) {
+        }        
+        if(action == Terminate) {
+          userInput(action, true); 
           break;
-        } else if(ch == 10) {
-          action = Start;
-          continue;
         }
-      }
-      preaction = action;
-      action = getAct();
-      if(action == Pause && preaction != Pause) {
-        nodelay(stdscr, FALSE);
+        
       } else {
-        nodelay(stdscr, TRUE);
+        preaction = action;
+        action = getAct();
+        if(action == Pause && preaction != Pause) {
+          nodelay(stdscr, FALSE);
+        } else {
+          nodelay(stdscr, TRUE);
+        }
+        s21_clear_memory(&info);
       }
-      s21_clear_memory(&info);
+      
     }
     nodelay(stdscr, FALSE); 
   }
@@ -109,8 +111,7 @@ UserAction_t getAct() {
     break;
   default:
     action = Up;
-    break;
-  }
+  } 
   return action;
 }
 
