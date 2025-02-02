@@ -2,8 +2,6 @@
 
 void s21_create_matrix(int rows, int columns, matrix_t *result) {
   if (result == NULL) {
-    mvprintw(4, 46, "result NULL");
-    refresh();
   } else {
     result->rows = rows;
     result->columns = columns;

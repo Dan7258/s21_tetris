@@ -30,11 +30,7 @@ void s21_remove_figure(figure_t *figure) { s21_remove_matrix(figure->matrix); }
 
 void s21_generate_figure(figure_t *figure) {
   if (figure == NULL) {
-    mvprintw(4, 45, "figure NULL");
-    refresh();
   } else {
-    mvprintw(5, 47, "figure");
-    refresh();
     s21_remove_figure(figure);
     SelectedFigure_t select = rand() % 7;
     s21_create_figure(select, figure);
