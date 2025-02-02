@@ -1,71 +1,59 @@
 #include "tetris.h"
+
 #include "brick_game/tetris/backend.h"
 #include "gui/cli/frontend.h"
 
 int main() {
-  initscr();              
-  cbreak();               
+  initscr();
+  cbreak();
   noecho();
   keypad(stdscr, TRUE);
+  nodelay(stdscr, TRUE);
   game_loop();
+  nodelay(stdscr, FALSE);
   endwin();
-  
+
   return 0;
 }
 
 void game_loop() {
-  UserAction_t action;
+  UserAction_t action = Up;
   UserAction_t preaction;
   GameInfo_t info;
   int flag = 1;
-  for(;;) {
-    s21_print_start_menu();
-    int ch = getch();
-    if(ch == KEY_BACKSPACE) {
-      flag = 0;
-    }
-    if(ch == 10) {
-      action = Start;
-      flag = 1;
-    }
-    if(ch == 10 || ch == KEY_BACKSPACE) {
-      break;
-    }
-
+  s21_print_start_menu();
+  for (; action != Start && action != Terminate; action = getAct()) {
   }
-  if(flag) {
-    nodelay(stdscr, TRUE); 
-    for(;;) {
-      userInput(action, true);
-      info = updateCurrentState();
-      s21_print_owerlay(info);
-      if(s21_check_end_game(info)) {
-        s21_print_game_over_menu(info);
-        s21_clear_memory(&info);
-        preaction = action;
-        action = Up;
-        for(;action != Start && action != Terminate; action = getAct()) {
-        }        
-        if(action == Terminate) {
-          userInput(action, true); 
-          break;
-        }
-        
-      } else {
-        preaction = action;
-        action = getAct();
-        if(action == Pause && preaction != Pause) {
-          nodelay(stdscr, FALSE);
-        } else {
-          nodelay(stdscr, TRUE);
-        }
-        s21_clear_memory(&info);
+  if (action == Terminate) {
+    flag = 0;
+  }
+  for (; flag;) {
+    userInput(action, true);
+    info = updateCurrentState();
+    s21_print_owerlay(info);
+    if (s21_check_end_game(info)) {
+      s21_print_game_over_menu(info);
+      s21_clear_memory(&info);
+      preaction = action;
+      action = Up;
+      for (; action != Start && action != Terminate; action = getAct()) {
       }
-      
+      if (action == Terminate) {
+        userInput(action, true);
+        flag = 0;
+      }
+
+    } else {
+      preaction = action;
+      action = getAct();
+      if (action == Pause && preaction != Pause) {
+        nodelay(stdscr, FALSE);
+      } else {
+        nodelay(stdscr, TRUE);
+      }
+      s21_clear_memory(&info);
     }
-    nodelay(stdscr, FALSE); 
   }
-  
 }
 
 void s21_clear_memory(GameInfo_t *info) {
@@ -85,45 +73,44 @@ UserAction_t getAct() {
   UserAction_t action;
   int ch = getch();
   switch (ch) {
-  case 10:
-    action = Start;
-    break;
-  case 27:
-    action = Pause;
-    break;
-  case KEY_UP:
-    action = Up;
-    break;
-  case KEY_LEFT:
-    action = Left;
-    break;
-  case KEY_RIGHT:
-    action = Right;
-    break;
-  case KEY_DOWN:
-    action = Down;
-    break;
-  case 32:
-    action = Action;
-    break;
-  case KEY_BACKSPACE:
-    action = Terminate;
-    break;
-  default:
-    action = Up;
-  } 
+    case 10:
+      action = Start;
+      break;
+    case 27:
+      action = Pause;
+      break;
+    case KEY_UP:
+      action = Up;
+      break;
+    case KEY_LEFT:
+      action = Left;
+      break;
+    case KEY_RIGHT:
+      action = Right;
+      break;
+    case KEY_DOWN:
+      action = Down;
+      break;
+    case 32:
+      action = Action;
+      break;
+    case KEY_BACKSPACE:
+      action = Terminate;
+      break;
+    default:
+      action = Up;
+  }
   return action;
 }
 
 int s21_check_end_game(GameInfo_t info) {
   int flag = 1;
-  for(int i = 0; i < ROWS_NEXT; i++) {
-    for(int j = 0; j < COLS_NEXT; j++) {
-      if(info.next[i][j]) {
+  for (int i = 0; i < ROWS_NEXT; i++) {
+    for (int j = 0; j < COLS_NEXT; j++) {
+      if (info.next[i][j]) {
         flag = 0;
       }
     }
   }
   return flag;
 }
-

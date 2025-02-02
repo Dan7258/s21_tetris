@@ -1,8 +1,8 @@
 #include "frontend.h"
 
 void s21_print_owerlay(GameInfo_t gameInfo) {
-  if(gameInfo.field == NULL || gameInfo.next == NULL) {
-    mvaddstr(3,46,"nulll");
+  if (gameInfo.field == NULL || gameInfo.next == NULL) {
+    mvaddstr(3, 46, "nulll");
     refresh();
   }
   s21_print_field_frame();
@@ -14,7 +14,7 @@ void s21_print_owerlay(GameInfo_t gameInfo) {
   s21_print_level(gameInfo);
   s21_print_buttons_frame();
   s21_print_buttons();
-  if(gameInfo.pause) {
+  if (gameInfo.pause) {
     s21_print_pause_menu();
   }
   mvaddch(0, COLS_FIELD * 2 + 13, ' ');
@@ -56,7 +56,7 @@ void s21_print_pause_menu() {
 
 void s21_print_game_over_menu(GameInfo_t gameInfo) {
   mvaddstr(2, 8, "GAME OVER");
-  mvprintw(4,2, "Your score: %d", gameInfo.score);
+  mvprintw(4, 2, "Your score: %d", gameInfo.score);
   mvaddstr(9, 2, "Press \"Terminate\"");
   mvaddstr(10, 2, "to exit the game");
   mvaddstr(12, 10, "OR");
@@ -176,14 +176,14 @@ void s21_print_buttons_frame() {
   }
 }
 
-void s21_print_buttons(){
+void s21_print_buttons() {
   mvaddstr(ROWS_FIELD + 3, 1, "^ - not used");
   mvaddstr(ROWS_FIELD + 4, 1, "-> - move right");
   mvaddstr(ROWS_FIELD + 5, 1, "<- - move left");
   mvaddstr(ROWS_FIELD + 6, 1, "v - move down");
   mvaddstr(ROWS_FIELD + 7, 1, "space - turn");
 
-  for (int j = ROWS_FIELD + 3; j < ROWS_FIELD + 8; j ++) {
+  for (int j = ROWS_FIELD + 3; j < ROWS_FIELD + 8; j++) {
     mvaddch(j, 16, ACS_VLINE);
   }
 

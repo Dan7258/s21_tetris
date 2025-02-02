@@ -7,9 +7,9 @@
 #define COLS_NEXT 5
 #define MAX_LEVEL 10
 
+#include <ncurses.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <ncurses.h>
 
 typedef enum {
   Start,
@@ -32,11 +32,11 @@ typedef struct {
   int pause;
 } GameInfo_t;
 
-//API functions
+// API functions
 void userInput(UserAction_t action, bool hold);
 GameInfo_t updateCurrentState();
 
-//game funtions
+// game funtions
 UserAction_t getAct();
 void game_loop();
 int s21_check_end_game(GameInfo_t info);

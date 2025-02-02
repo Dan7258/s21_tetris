@@ -2,6 +2,7 @@
 #define FRONTEND_H
 
 #include <ncurses.h>
+
 #include "../../tetris.h"
 
 // frontend functions
