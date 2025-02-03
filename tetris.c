@@ -18,7 +18,6 @@ int main() {
 
 void game_loop() {
   UserAction_t action = Up;
-  UserAction_t preaction;
   GameInfo_t info;
   int flag = 1;
   s21_print_start_menu();
@@ -31,9 +30,9 @@ void game_loop() {
     userInput(action, true);
     info = updateCurrentState();
     s21_print_owerlay(info);
-    if (action == Pause && preaction != Pause) {
+    if (info.pause) {
+      s21_print_pause_menu();
       s21_clear_memory(&info);
-      preaction = action;
       action = Up;
       for (; action != Start && action != Terminate && action != Pause;
            action = getAct()) {
@@ -41,7 +40,6 @@ void game_loop() {
     } else if (s21_check_end_game(info)) {
       s21_print_game_over_menu(info);
       s21_clear_memory(&info);
-      preaction = action;
       action = Up;
       for (; action != Start && action != Terminate; action = getAct()) {
       }
@@ -51,7 +49,6 @@ void game_loop() {
       }
 
     } else {
-      preaction = action;
       action = getAct();
       s21_clear_memory(&info);
     }

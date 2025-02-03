@@ -43,7 +43,8 @@ typedef struct condition {
 // matrix functions
 void s21_create_matrix(int rows, int columns, matrix_t *result);
 void s21_remove_matrix(matrix_t *M);
-void s21_turn_matrix(matrix_t *M);
+void s21_turn_left_matrix(matrix_t *M);
+void s21_turn_right_matrix(matrix_t *M);
 void s21_copy_matrix(matrix_t *M, matrix_t *result);
 
 // figure functions
@@ -66,6 +67,8 @@ void s21_turn_figure();
 void s21_add_figure_on_field();
 void s21_remove_figure_on_field();
 void s21_spawn();
+int s21_is_figure_valid(figure_t *figure);
+void s21_fix_figure(figure_t *figure);
 
 // fsm functions
 int s21_check_and_clear_rows();

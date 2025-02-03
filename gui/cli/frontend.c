@@ -2,9 +2,6 @@
 
 void s21_print_owerlay(GameInfo_t gameInfo) {
   s21_print_field(gameInfo);
-  if (gameInfo.pause) {
-    s21_print_pause_menu();
-  }
   s21_print_field_frame();
   s21_print_info_frame();
   s21_print_next_figure(gameInfo);
