@@ -73,6 +73,7 @@ void s21_fix_figure(figure_t *figure);
 // fsm functions
 int s21_check_and_clear_rows();
 int s21_check_filled_row(int m);
+void s21_check_score(int count);
 void s21_move_left();
 void s21_move_right();
 void s21_move_all_down();

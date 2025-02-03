@@ -27,7 +27,8 @@ void userInput(UserAction_t action, bool hold) {
     }
   }
   if (condition->status == AttachingG) {
-    s21_check_and_clear_rows();
+    int count = s21_check_and_clear_rows();
+    s21_check_score(count);
     if (!s21_check_lose()) {
       s21_spawn();
     } else {
@@ -58,7 +59,7 @@ GameInfo_t updateCurrentState() {
       info.next[m][n] = condition->nextFigure->matrix->matrix[m][n];
     }
   }
-  info.score = 0;
+  info.score = condition->score;
   info.high_score = 0;
   info.level = 0;
   info.speed = 0;
@@ -84,6 +85,25 @@ int s21_check_and_clear_rows() {
     }
   }
   return counter;
+}
+
+void s21_check_score(int count) {
+  condition_t *condition = s21_get_current_condition();
+  switch (count)
+  {
+  case 1:
+    condition->score += 100;
+    break;
+  case 2:
+    condition->score += 300;
+    break;
+  case 3:
+    condition->score += 700;
+    break;
+  case 4:
+    condition->score += 1500;
+    break;
+}
 }
 
 int s21_check_filled_row(int m) {
