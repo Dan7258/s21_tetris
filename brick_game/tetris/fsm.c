@@ -2,6 +2,7 @@
 
 void userInput(UserAction_t action, bool hold) {
   condition_t *condition = s21_get_current_condition();
+  hold = !hold;
   if (action == Start) {
     s21_start_game();
   } else if (action == Pause && condition->status != InitG) {
@@ -21,9 +22,9 @@ void userInput(UserAction_t action, bool hold) {
   }
 
   if ((condition->status == MovingG || action == Up)) {
-    if (millis() - condition->time > condition->interval) {
+    if (s21_millis() - condition->time > condition->interval) {
       s21_move_down();
-      condition->time = millis();
+      condition->time = s21_millis();
     }
   }
   if (condition->status == AttachingG) {
@@ -60,7 +61,7 @@ GameInfo_t updateCurrentState() {
     }
   }
   info.score = condition->score;
-  info.high_score = 0;
+  info.high_score = condition->high_score;
   info.level = 0;
   info.speed = 0;
   info.pause = condition->status == PauseG ? 1 : 0;
@@ -89,21 +90,23 @@ int s21_check_and_clear_rows() {
 
 void s21_check_score(int count) {
   condition_t *condition = s21_get_current_condition();
-  switch (count)
-  {
-  case 1:
-    condition->score += 100;
-    break;
-  case 2:
-    condition->score += 300;
-    break;
-  case 3:
-    condition->score += 700;
-    break;
-  case 4:
-    condition->score += 1500;
-    break;
-}
+  switch (count) {
+    case 1:
+      condition->score += 100;
+      break;
+    case 2:
+      condition->score += 300;
+      break;
+    case 3:
+      condition->score += 700;
+      break;
+    case 4:
+      condition->score += 1500;
+      break;
+  }
+  if (condition->score > condition->high_score) {
+    condition->high_score = condition->score;
+  }
 }
 
 int s21_check_filled_row(int m) {
@@ -170,16 +173,18 @@ void s21_init_condition() {
   s21_generate_figure(condition->figure);
   s21_generate_figure(condition->nextFigure);
   condition->status = InitG;
-  condition->time = millis();
+  condition->time = s21_millis();
   condition->interval = 500;
+  condition->high_score = s21_get_high_score_from_file();
 }
 
 void s21_start_game() {
   condition_t *condition = s21_get_current_condition();
-
   if (condition->status == PauseG || condition->status == GameOverG) {
     s21_remove_matrix(condition->field);
     condition->status = InitG;
+    condition->score = 0;
+    s21_set_high_score_in_file(condition->high_score);
   }
   if (condition->field == NULL) {
     s21_init_condition();
@@ -200,6 +205,7 @@ condition_t *s21_get_current_condition() {
 
 void s21_clean_condition() {
   condition_t *condition = s21_get_current_condition();
+  s21_set_high_score_in_file(condition->high_score);
   s21_remove_matrix(condition->field);
   free(condition->field);
   condition->field = NULL;
@@ -213,9 +219,6 @@ void s21_clean_condition() {
   free(condition->nextFigure);
   condition->nextFigure->matrix = NULL;
   condition->nextFigure = NULL;
-  condition->interval = 0;
-  condition->status = GameOverG;
-  condition->time = 0;
   condition = NULL;
 }
 
@@ -229,6 +232,7 @@ void s21_game_over() {
     }
   }
   condition->status = GameOverG;
+  s21_set_high_score_in_file(condition->high_score);
 }
 
 int s21_check_lose() {
@@ -242,6 +246,26 @@ int s21_check_lose() {
   return flag;
 }
 
-unsigned long millis() {
+unsigned long s21_millis() {
   return (unsigned long)(clock() * 1000 / CLOCKS_PER_SEC);
+}
+
+int s21_get_high_score_from_file() {
+  int high_score = 0;
+  FILE *file;
+  file = fopen("data.txt", "r");
+  if (file) {
+    mvprintw(4, 45, "aaaa");
+    refresh();
+    fscanf(file, "%d", &high_score);
+    fclose(file);
+  }
+  return high_score;
+}
+
+void s21_set_high_score_in_file(int high_score) {
+  FILE *file;
+  file = fopen("data.txt", "w");
+  fprintf(file, "%d", high_score);
+  fclose(file);
 }

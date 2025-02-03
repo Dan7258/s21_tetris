@@ -130,6 +130,7 @@ void s21_print_high_score(GameInfo_t gameInfo) {
   char buffer[20];
   mvaddstr(2, COLS_FIELD * 2 + 3, "record:");
   sprintf(buffer, "%d", gameInfo.high_score);
+  mvaddstr(3, COLS_FIELD * 2 + 4, "       ");
   mvaddstr(3, COLS_FIELD * 2 + 4, buffer);
 }
 
@@ -137,6 +138,7 @@ void s21_print_score(GameInfo_t gameInfo) {
   char buffer[20];
   mvaddstr(5, COLS_FIELD * 2 + 3, "score:");
   sprintf(buffer, "%d", gameInfo.score);
+  mvaddstr(6, COLS_FIELD * 2 + 4, "       ");
   mvaddstr(6, COLS_FIELD * 2 + 4, buffer);
 }
 

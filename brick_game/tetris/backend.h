@@ -38,6 +38,7 @@ typedef struct condition {
   unsigned long time;
   unsigned long interval;
   int score;
+  int high_score;
 } condition_t;
 
 // matrix functions
@@ -85,5 +86,7 @@ condition_t *s21_get_current_condition();
 void s21_clean_condition();
 void s21_game_over();
 int s21_check_lose();
-unsigned long millis();
+unsigned long s21_millis();
+int s21_get_high_score_from_file();
+void s21_set_high_score_in_file(int high_score);
 #endif
