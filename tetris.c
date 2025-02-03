@@ -75,7 +75,7 @@ UserAction_t getAct() {
     case 10:
       action = Start;
       break;
-    case 27:
+    case 112:
       action = Pause;
       break;
     case KEY_UP:

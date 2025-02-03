@@ -20,13 +20,13 @@ void userInput(UserAction_t action, bool hold) {
     s21_turn();
   }
 
-  if (action != Pause && (condition->status == MovingG || action == Up)) {
+  if ((condition->status == MovingG || action == Up)) {
     if (millis() - condition->time > condition->interval) {
       s21_move_down();
       condition->time = millis();
     }
   }
-  if (action != Pause && condition->status == AttachingG) {
+  if (condition->status == AttachingG) {
     s21_check_and_clear_rows();
     if (!s21_check_lose()) {
       s21_spawn();

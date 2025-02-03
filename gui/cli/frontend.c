@@ -191,7 +191,7 @@ void s21_print_buttons() {
     mvaddch(j, 16, ACS_VLINE);
   }
 
-  mvaddstr(ROWS_FIELD + 3, 17, "esc - pause");
+  mvaddstr(ROWS_FIELD + 3, 17, "p - pause");
   mvaddstr(ROWS_FIELD + 4, 17, "enter - start");
   mvaddstr(ROWS_FIELD + 5, 17, "backspace");
   mvaddstr(ROWS_FIELD + 6, 21, "- terminate");
