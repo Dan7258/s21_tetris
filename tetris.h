@@ -41,5 +41,6 @@ UserAction_t getAct();
 void game_loop();
 int s21_check_end_game(GameInfo_t info);
 void s21_clear_memory(GameInfo_t *info);
+unsigned long s21_millis();
 
 #endif

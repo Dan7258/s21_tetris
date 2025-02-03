@@ -19,6 +19,7 @@ int main() {
 void game_loop() {
   UserAction_t action = Up;
   GameInfo_t info;
+  unsigned long time = s21_millis();
   int flag = 1;
   s21_print_start_menu();
   for (; action != Start && action != Terminate; action = getAct()) {
@@ -27,8 +28,15 @@ void game_loop() {
     flag = 0;
   }
   for (; flag;) {
-    userInput(action, true);
+    userInput(action, false);
     info = updateCurrentState();
+    if (s21_millis() - time > 1000.0 / info.speed) {
+      s21_clear_memory(&info);
+      action = Down;
+      userInput(action, true);
+      info = updateCurrentState();
+      time = s21_millis();
+    }
     s21_print_owerlay(info);
     if (info.pause) {
       s21_print_pause_menu();
@@ -44,10 +52,9 @@ void game_loop() {
       for (; action != Start && action != Terminate; action = getAct()) {
       }
       if (action == Terminate) {
-        userInput(action, true);
+        userInput(action, false);
         flag = 0;
       }
-
     } else {
       action = getAct();
       s21_clear_memory(&info);
@@ -112,4 +119,8 @@ int s21_check_end_game(GameInfo_t info) {
     }
   }
   return flag;
+}
+
+unsigned long s21_millis() {
+  return (unsigned long)(clock() * 1000 / CLOCKS_PER_SEC);
 }

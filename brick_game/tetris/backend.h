@@ -35,10 +35,9 @@ typedef struct condition {
   figure_t *figure;
   figure_t *nextFigure;
   GameStatus_t status;
-  unsigned long time;
-  unsigned long interval;
   int score;
   int high_score;
+  int level;
 } condition_t;
 
 // matrix functions
@@ -75,6 +74,7 @@ void s21_fix_figure(figure_t *figure);
 int s21_check_and_clear_rows();
 int s21_check_filled_row(int m);
 void s21_check_score(int count);
+void s21_check_level();
 void s21_move_left();
 void s21_move_right();
 void s21_move_all_down();
@@ -86,7 +86,6 @@ condition_t *s21_get_current_condition();
 void s21_clean_condition();
 void s21_game_over();
 int s21_check_lose();
-unsigned long s21_millis();
 int s21_get_high_score_from_file();
 void s21_set_high_score_in_file(int high_score);
 #endif

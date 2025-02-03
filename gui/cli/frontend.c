@@ -2,12 +2,12 @@
 
 void s21_print_owerlay(GameInfo_t gameInfo) {
   s21_print_field(gameInfo);
-  s21_print_field_frame();
-  s21_print_info_frame();
   s21_print_next_figure(gameInfo);
   s21_print_high_score(gameInfo);
   s21_print_score(gameInfo);
   s21_print_level(gameInfo);
+  s21_print_field_frame();
+  s21_print_info_frame();
   s21_print_buttons_frame();
   s21_print_buttons();
   mvaddch(0, COLS_FIELD * 2 + 13, ' ');
@@ -144,20 +144,23 @@ void s21_print_score(GameInfo_t gameInfo) {
 
 void s21_print_level(GameInfo_t gameInfo) {
   char buffer[20];
-  mvaddstr(7, COLS_FIELD * 2 + 3, "level:");
+  mvaddstr(8, COLS_FIELD * 2 + 3, "level:");
   sprintf(buffer, "%d", gameInfo.level);
-  mvaddstr(8, COLS_FIELD * 2 + 4, buffer);
+  mvaddstr(9, COLS_FIELD * 2 + 3, "      ");
+  mvaddstr(9, COLS_FIELD * 2 + 4, buffer);
 }
 
 void s21_print_next_figure(GameInfo_t gameInfo) {
-  mvaddstr(9, COLS_FIELD * 2 + 3, "next:");
+  mvaddstr(11, COLS_FIELD * 2 + 3, "next:");
 
   for (int i = 0; i < ROWS_NEXT; i++) {
     for (int j = 0; j < COLS_NEXT; j++) {
       if (gameInfo.next[i][j]) {
-        mvaddch(i + 10, j + COLS_FIELD * 2 + 4, ACS_BLOCK);
+        mvaddch(i + 12, (j * 2) + COLS_FIELD * 2 + 4, ACS_CKBOARD);
+        mvaddch(i + 12, (j * 2) + COLS_FIELD * 2 + 5, ACS_CKBOARD);
       } else {
-        mvaddch(i + 10, j + COLS_FIELD * 2 + 4, ' ');
+        mvaddch(i + 12, (j * 2) + COLS_FIELD * 2 + 4, ' ');
+        mvaddch(i + 12, (j * 2) + COLS_FIELD * 2 + 5, ' ');
       }
     }
   }
