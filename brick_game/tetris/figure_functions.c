@@ -1,53 +1,53 @@
 #include "backend.h"
 
-void s21_create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
+void create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
   switch (SelectedFigure) {
     case O:
-      s21_create_O(figure);
+      create_O(figure);
       break;
     case I:
-      s21_create_I(figure);
+      create_I(figure);
       break;
     case S:
-      s21_create_S(figure);
+      create_S(figure);
       break;
     case Z:
-      s21_create_Z(figure);
+      create_Z(figure);
       break;
     case L:
-      s21_create_L(figure);
+      create_L(figure);
       break;
     case J:
-      s21_create_J(figure);
+      create_J(figure);
       break;
     case T:
-      s21_create_T(figure);
+      create_T(figure);
       break;
   }
 }
 
-void s21_remove_figure(figure_t *figure) { s21_remove_matrix(figure->matrix); }
+void remove_figure(figure_t *figure) { remove_matrix(figure->matrix); }
 
-void s21_generate_figure(figure_t *figure) {
+void generate_figure(figure_t *figure) {
   if (figure == NULL) {
   } else {
-    s21_remove_figure(figure);
+    remove_figure(figure);
     SelectedFigure_t select = rand() % 7;
-    s21_create_figure(select, figure);
+    create_figure(select, figure);
   }
 }
 
-void s21_replace_figure(figure_t *figure, figure_t *nextFigure) {
-  s21_remove_figure(figure);
-  s21_create_matrix(nextFigure->matrix->rows, nextFigure->matrix->columns,
-                    figure->matrix);
-  s21_copy_matrix(nextFigure->matrix, figure->matrix);
+void replace_figure(figure_t *figure, figure_t *nextFigure) {
+  remove_figure(figure);
+  create_matrix(nextFigure->matrix->rows, nextFigure->matrix->columns,
+                figure->matrix);
+  copy_matrix(nextFigure->matrix, figure->matrix);
   figure->x = nextFigure->x;
   figure->y = nextFigure->y;
 }
 
-void s21_create_O(figure_t *figure) {
-  s21_create_matrix(2, 2, figure->matrix);
+void create_O(figure_t *figure) {
+  create_matrix(2, 2, figure->matrix);
 
   figure->matrix->matrix[0][0] = 1;
   figure->matrix->matrix[0][1] = 1;
@@ -58,8 +58,8 @@ void s21_create_O(figure_t *figure) {
   figure->y = -2;
 }
 
-void s21_create_I(figure_t *figure) {
-  s21_create_matrix(4, 4, figure->matrix);
+void create_I(figure_t *figure) {
+  create_matrix(4, 4, figure->matrix);
 
   figure->matrix->matrix[2][0] = 1;
   figure->matrix->matrix[2][1] = 1;
@@ -70,8 +70,8 @@ void s21_create_I(figure_t *figure) {
   figure->y = -3;
 }
 
-void s21_create_S(figure_t *figure) {
-  s21_create_matrix(3, 3, figure->matrix);
+void create_S(figure_t *figure) {
+  create_matrix(3, 3, figure->matrix);
 
   figure->matrix->matrix[0][0] = 1;
   figure->matrix->matrix[1][0] = 1;
@@ -82,8 +82,8 @@ void s21_create_S(figure_t *figure) {
   figure->y = -3;
 }
 
-void s21_create_Z(figure_t *figure) {
-  s21_create_matrix(3, 3, figure->matrix);
+void create_Z(figure_t *figure) {
+  create_matrix(3, 3, figure->matrix);
 
   figure->matrix->matrix[0][1] = 1;
   figure->matrix->matrix[1][1] = 1;
@@ -94,8 +94,8 @@ void s21_create_Z(figure_t *figure) {
   figure->y = -3;
 }
 
-void s21_create_L(figure_t *figure) {
-  s21_create_matrix(3, 3, figure->matrix);
+void create_L(figure_t *figure) {
+  create_matrix(3, 3, figure->matrix);
 
   figure->matrix->matrix[0][1] = 1;
   figure->matrix->matrix[1][1] = 1;
@@ -106,8 +106,8 @@ void s21_create_L(figure_t *figure) {
   figure->y = -3;
 }
 
-void s21_create_J(figure_t *figure) {
-  s21_create_matrix(3, 3, figure->matrix);
+void create_J(figure_t *figure) {
+  create_matrix(3, 3, figure->matrix);
 
   figure->matrix->matrix[0][2] = 1;
   figure->matrix->matrix[1][2] = 1;
@@ -118,8 +118,8 @@ void s21_create_J(figure_t *figure) {
   figure->y = -3;
 }
 
-void s21_create_T(figure_t *figure) {
-  s21_create_matrix(3, 3, figure->matrix);
+void create_T(figure_t *figure) {
+  create_matrix(3, 3, figure->matrix);
 
   figure->matrix->matrix[1][0] = 1;
   figure->matrix->matrix[1][1] = 1;
@@ -130,9 +130,9 @@ void s21_create_T(figure_t *figure) {
   figure->y = -3;
 }
 
-void s21_move_figure_left() {
+void move_figure_left() {
   int flag = 1;
-  condition_t *condition = s21_get_current_condition();
+  condition_t *condition = get_current_condition();
   for (int m = 0; m < condition->figure->matrix->rows && flag; m++) {
     for (int n = 0; n < condition->figure->matrix->columns && flag; n++) {
       if (condition->figure->matrix->matrix[m][n] &&
@@ -153,9 +153,9 @@ void s21_move_figure_left() {
   condition->figure->x = flag ? condition->figure->x - 1 : condition->figure->x;
 }
 
-void s21_move_figure_right() {
+void move_figure_right() {
   int flag = 1;
-  condition_t *condition = s21_get_current_condition();
+  condition_t *condition = get_current_condition();
   for (int m = 0; m < condition->figure->matrix->rows && flag; m++) {
     for (int n = 0; n < condition->figure->matrix->columns && flag; n++) {
       if (condition->figure->matrix->matrix[m][n] &&
@@ -175,9 +175,9 @@ void s21_move_figure_right() {
   condition->figure->x = flag ? condition->figure->x + 1 : condition->figure->x;
 }
 
-int s21_move_figure_down() {
+int move_figure_down() {
   int flag = 1;
-  condition_t *condition = s21_get_current_condition();
+  condition_t *condition = get_current_condition();
   for (int m = 0; m < condition->figure->matrix->rows && flag; m++) {
     for (int n = 0; n < condition->figure->matrix->columns && flag; n++) {
       if (condition->figure->matrix->matrix[m][n] &&
@@ -198,21 +198,21 @@ int s21_move_figure_down() {
   return flag;
 }
 
-void s21_move_figure_all_down() {
-  for (; s21_move_figure_down();) {
+void move_figure_all_down() {
+  for (; move_figure_down();) {
   }
 }
 
-void s21_turn_figure() {
-  condition_t *condition = s21_get_current_condition();
-  s21_turn_left_matrix(condition->figure->matrix);
-  if (!s21_is_figure_valid(condition->figure)) {
-    s21_fix_figure(condition->figure);
+void turn_figure() {
+  condition_t *condition = get_current_condition();
+  turn_left_matrix(condition->figure->matrix);
+  if (!is_figure_valid(condition->figure)) {
+    fix_figure(condition->figure);
   }
 }
 
-void s21_add_figure_on_field() {
-  condition_t *condition = s21_get_current_condition();
+void add_figure_on_field() {
+  condition_t *condition = get_current_condition();
   for (int m = 0; m < condition->figure->matrix->rows; m++) {
     for (int n = 0; n < condition->figure->matrix->columns; n++) {
       if (m + condition->figure->y >= 0 &&
@@ -225,8 +225,8 @@ void s21_add_figure_on_field() {
   }
 }
 
-void s21_remove_figure_on_field() {
-  condition_t *condition = s21_get_current_condition();
+void remove_figure_on_field() {
+  condition_t *condition = get_current_condition();
   for (int m = 0; m < condition->figure->matrix->rows; m++) {
     for (int n = 0; n < condition->figure->matrix->columns; n++) {
       if (m + condition->figure->y >= 0 &&
@@ -239,15 +239,15 @@ void s21_remove_figure_on_field() {
   }
 }
 
-void s21_spawn() {
-  condition_t *condition = s21_get_current_condition();
-  s21_replace_figure(condition->figure, condition->nextFigure);
-  s21_generate_figure(condition->nextFigure);
+void spawn() {
+  condition_t *condition = get_current_condition();
+  replace_figure(condition->figure, condition->nextFigure);
+  generate_figure(condition->nextFigure);
   condition->status = MovingG;
 }
 
-int s21_is_figure_valid(figure_t *figure) {
-  condition_t *condition = s21_get_current_condition();
+int is_figure_valid(figure_t *figure) {
+  condition_t *condition = get_current_condition();
   int flag = 1;
   for (int m = figure->matrix->rows - 1; m >= 0 && flag; m--) {
     for (int n = 0; n < figure->matrix->columns && flag; n++) {
@@ -270,8 +270,8 @@ int s21_is_figure_valid(figure_t *figure) {
   return flag;
 }
 
-void s21_fix_figure(figure_t *figure) {
-  condition_t *condition = s21_get_current_condition();
+void fix_figure(figure_t *figure) {
+  condition_t *condition = get_current_condition();
   int pastX = figure->x;
   int pastY = figure->y;
   for (int m = figure->matrix->rows - 1; m >= 0; m--) {
@@ -298,9 +298,9 @@ void s21_fix_figure(figure_t *figure) {
       }
     }
   }
-  if (!s21_is_figure_valid(figure)) {
+  if (!is_figure_valid(figure)) {
     figure->x = pastX;
     figure->y = pastY;
-    s21_turn_right_matrix(figure->matrix);
+    turn_right_matrix(figure->matrix);
   }
 }

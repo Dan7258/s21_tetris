@@ -1,40 +1,40 @@
 #include "backend.h"
 
 void userInput(UserAction_t action, bool hold) {
-  condition_t *condition = s21_get_current_condition();
+  condition_t *condition = get_current_condition();
   if (action == Start) {
-    s21_start_game();
+    start_game();
   } else if (action == Pause && condition->status != InitG) {
     condition->status = condition->status == PauseG ? MovingG : PauseG;
   } else if (action == Terminate && condition->status == PauseG) {
-    s21_game_over();
+    game_over();
   } else if (action == Terminate && condition->status == GameOverG) {
-    s21_clean_condition();
+    clean_condition();
   } else if (action == Left && condition->status == MovingG) {
-    s21_move_left();
+    move_left();
   } else if (action == Right && condition->status == MovingG) {
-    s21_move_right();
+    move_right();
   } else if (action == Down && condition->status == MovingG && !hold) {
-    s21_move_all_down();
+    move_all_down();
   } else if (action == Down && condition->status == MovingG && hold) {
-    s21_move_down();
+    move_down();
   } else if (action == Action && condition->status == MovingG) {
-    s21_turn();
+    turn();
   }
   if (condition->status == AttachingG) {
-    int count = s21_check_and_clear_rows();
-    s21_check_score(count);
-    s21_check_level();
-    if (!s21_check_lose()) {
-      s21_spawn();
+    int count = check_and_clear_rows();
+    check_score(count);
+    check_level();
+    if (!check_lose()) {
+      spawn();
     } else {
-      s21_game_over();
+      game_over();
     }
   }
 }
 
 GameInfo_t updateCurrentState() {
-  condition_t *condition = s21_get_current_condition();
+  condition_t *condition = get_current_condition();
   GameInfo_t info = {0};
   info.field = (int **)malloc(ROWS_FIELD * sizeof(int *));
   for (int i = 0; i < ROWS_FIELD; i++) {
@@ -63,11 +63,11 @@ GameInfo_t updateCurrentState() {
   return info;
 }
 
-int s21_check_and_clear_rows() {
-  condition_t *condition = s21_get_current_condition();
+int check_and_clear_rows() {
+  condition_t *condition = get_current_condition();
   int counter = 0;
   for (int m = ROWS_FIELD - 1; m >= 0; m--) {
-    if (s21_check_filled_row(m)) {
+    if (check_filled_row(m)) {
       counter++;
       for (int f = m; f > 0; f--) {
         for (int n = 0; n < COLS_FIELD; n++) {
@@ -83,8 +83,8 @@ int s21_check_and_clear_rows() {
   return counter;
 }
 
-void s21_check_score(int count) {
-  condition_t *condition = s21_get_current_condition();
+void check_score(int count) {
+  condition_t *condition = get_current_condition();
   switch (count) {
     case 1:
       condition->score += 100;
@@ -104,8 +104,8 @@ void s21_check_score(int count) {
   }
 }
 
-void s21_check_level() {
-  condition_t *condition = s21_get_current_condition();
+void check_level() {
+  condition_t *condition = get_current_condition();
   if (condition->score / 600 + 1 > 10) {
     condition->level = 10;
   } else {
@@ -113,8 +113,8 @@ void s21_check_level() {
   }
 }
 
-int s21_check_filled_row(int m) {
-  condition_t *condition = s21_get_current_condition();
+int check_filled_row(int m) {
+  condition_t *condition = get_current_condition();
   int flag = 1;
   for (int n = 0; n < COLS_FIELD && flag; n++) {
     flag = (condition->field->matrix[m][n]) ? flag : 0;
@@ -122,103 +122,102 @@ int s21_check_filled_row(int m) {
   return flag;
 }
 
-void s21_move_left() {
-  condition_t *condition = s21_get_current_condition();
+void move_left() {
+  condition_t *condition = get_current_condition();
   condition->status = MovingG;
-  s21_remove_figure_on_field();
-  s21_move_figure_left();
-  s21_add_figure_on_field();
+  remove_figure_on_field();
+  move_figure_left();
+  add_figure_on_field();
 }
 
-void s21_move_right() {
-  condition_t *condition = s21_get_current_condition();
+void move_right() {
+  condition_t *condition = get_current_condition();
   condition->status = MovingG;
-  s21_remove_figure_on_field();
-  s21_move_figure_right();
-  s21_add_figure_on_field();
+  remove_figure_on_field();
+  move_figure_right();
+  add_figure_on_field();
 }
 
-void s21_move_all_down() {
-  condition_t *condition = s21_get_current_condition();
+void move_all_down() {
+  condition_t *condition = get_current_condition();
   condition->status = AttachingG;
-  s21_remove_figure_on_field();
-  s21_move_figure_all_down();
-  s21_add_figure_on_field();
+  remove_figure_on_field();
+  move_figure_all_down();
+  add_figure_on_field();
 }
 
-void s21_move_down() {
-  condition_t *condition = s21_get_current_condition();
+void move_down() {
+  condition_t *condition = get_current_condition();
   if (condition->status != AttachingG) {
     condition->status = MovingG;
-    s21_remove_figure_on_field();
-    if (!s21_move_figure_down()) {
+    remove_figure_on_field();
+    if (!move_figure_down()) {
       condition->status = AttachingG;
     }
-    s21_add_figure_on_field();
+    add_figure_on_field();
   }
 }
 
-void s21_turn() {
-  condition_t *condition = s21_get_current_condition();
+void turn() {
+  condition_t *condition = get_current_condition();
   condition->status = MovingG;
-  s21_remove_figure_on_field();
-  s21_turn_figure();
-  s21_add_figure_on_field();
+  remove_figure_on_field();
+  turn_figure();
+  add_figure_on_field();
 }
 
-void s21_init_condition() {
-  condition_t *condition = s21_get_current_condition();
+void init_condition() {
+  condition_t *condition = get_current_condition();
   condition->field = malloc(sizeof(matrix_t));
   condition->figure = malloc(sizeof(figure_t));
   condition->nextFigure = malloc(sizeof(figure_t));
   condition->figure->matrix = malloc(sizeof(matrix_t));
   condition->nextFigure->matrix = malloc(sizeof(matrix_t));
-  s21_create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
-  s21_generate_figure(condition->figure);
-  s21_generate_figure(condition->nextFigure);
+  create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
+  generate_figure(condition->figure);
+  generate_figure(condition->nextFigure);
   condition->status = InitG;
-  s21_check_level();
-  condition->high_score = s21_get_high_score_from_file();
+  check_level();
+  condition->high_score = get_high_score_from_file();
 }
 
-void s21_start_game() {
-  condition_t *condition = s21_get_current_condition();
+void start_game() {
+  condition_t *condition = get_current_condition();
   if (condition->status == PauseG || condition->status == GameOverG) {
-    s21_remove_matrix(condition->field);
+    remove_matrix(condition->field);
     condition->status = InitG;
     condition->score = 0;
-    s21_check_level();
-    s21_set_high_score_in_file(condition->high_score);
+    check_level();
+    set_high_score_in_file(condition->high_score);
   }
   if (condition->field == NULL) {
-    s21_init_condition();
-    srand(time(NULL));
+    init_condition();
   }
   if (condition->status == InitG) {
-    s21_create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
-    s21_generate_figure(condition->figure);
-    s21_generate_figure(condition->nextFigure);
+    create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
+    generate_figure(condition->figure);
+    generate_figure(condition->nextFigure);
     condition->status = MovingG;
   }
 }
 
-condition_t *s21_get_current_condition() {
+condition_t *get_current_condition() {
   static condition_t condition;
   return &condition;
 }
 
-void s21_clean_condition() {
-  condition_t *condition = s21_get_current_condition();
-  s21_set_high_score_in_file(condition->high_score);
-  s21_remove_matrix(condition->field);
+void clean_condition() {
+  condition_t *condition = get_current_condition();
+  set_high_score_in_file(condition->high_score);
+  remove_matrix(condition->field);
   free(condition->field);
   condition->field = NULL;
-  s21_remove_figure(condition->figure);
+  remove_figure(condition->figure);
   free(condition->figure->matrix);
   free(condition->figure);
   condition->figure->matrix = NULL;
   condition->figure = NULL;
-  s21_remove_figure(condition->nextFigure);
+  remove_figure(condition->nextFigure);
   free(condition->nextFigure->matrix);
   free(condition->nextFigure);
   condition->nextFigure->matrix = NULL;
@@ -226,21 +225,21 @@ void s21_clean_condition() {
   condition = NULL;
 }
 
-void s21_game_over() {
-  condition_t *condition = s21_get_current_condition();
-  s21_remove_matrix(condition->nextFigure->matrix);
-  s21_create_matrix(5, 5, condition->nextFigure->matrix);
+void game_over() {
+  condition_t *condition = get_current_condition();
+  remove_matrix(condition->nextFigure->matrix);
+  create_matrix(5, 5, condition->nextFigure->matrix);
   for (int i = 0; i < ROWS_NEXT; i++) {
     for (int j = 0; j < COLS_NEXT; j++) {
       condition->nextFigure->matrix->matrix[i][j] = 0;
     }
   }
   condition->status = GameOverG;
-  s21_set_high_score_in_file(condition->high_score);
+  set_high_score_in_file(condition->high_score);
 }
 
-int s21_check_lose() {
-  condition_t *condition = s21_get_current_condition();
+int check_lose() {
+  condition_t *condition = get_current_condition();
   int flag = 0;
   for (int m = 0; m < COLS_FIELD && !flag; m++) {
     if (condition->field->matrix[0][m] == 1) {
@@ -250,7 +249,7 @@ int s21_check_lose() {
   return flag;
 }
 
-int s21_get_high_score_from_file() {
+int get_high_score_from_file() {
   int high_score = 0;
   FILE *file;
   file = fopen("data.txt", "r");
@@ -261,7 +260,7 @@ int s21_get_high_score_from_file() {
   return high_score;
 }
 
-void s21_set_high_score_in_file(int high_score) {
+void set_high_score_in_file(int high_score) {
   FILE *file;
   file = fopen("data.txt", "w");
   fprintf(file, "%d", high_score);

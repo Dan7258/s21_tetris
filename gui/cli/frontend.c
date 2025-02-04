@@ -1,36 +1,36 @@
 #include "frontend.h"
 
-void s21_print_owerlay(GameInfo_t gameInfo) {
-  s21_print_field(gameInfo);
-  s21_print_next_figure(gameInfo);
-  s21_print_high_score(gameInfo);
-  s21_print_score(gameInfo);
-  s21_print_level(gameInfo);
-  s21_print_field_frame();
-  s21_print_info_frame();
-  s21_print_buttons_frame();
-  s21_print_buttons();
+void print_owerlay(GameInfo_t gameInfo) {
+  print_field(gameInfo);
+  print_next_figure(gameInfo);
+  print_high_score(gameInfo);
+  print_score(gameInfo);
+  print_level(gameInfo);
+  print_field_frame();
+  print_info_frame();
+  print_buttons_frame();
+  print_buttons();
   mvaddch(0, COLS_FIELD * 2 + 13, ' ');
   refresh();
 }
 
-void s21_print_start_menu() {
+void print_start_menu() {
   mvaddstr(2, 8, "TETRIS");
   mvaddstr(4, 3, "Press \"Enter\" to");
   mvaddstr(5, 4, "start the game");
   mvaddstr(7, 10, "OR");
   mvaddstr(9, 2, "Press \"Terminate\"");
   mvaddstr(10, 2, "to exit the game");
-  s21_print_field_frame();
-  s21_print_info_frame();
-  s21_print_buttons_frame();
-  s21_print_buttons();
+  print_field_frame();
+  print_info_frame();
+  print_buttons_frame();
+  print_buttons();
   mvaddch(0, COLS_FIELD * 2 + 13, ' ');
   refresh();
 }
 
-void s21_print_pause_menu() {
-  s21_clear_field();
+void print_pause_menu() {
+  clear_field();
   mvaddstr(2, 8, "PAUSE");
   mvaddstr(4, 3, "Press \"Escape\" to");
   mvaddstr(5, 4, "continue the game");
@@ -40,15 +40,15 @@ void s21_print_pause_menu() {
   mvaddstr(12, 10, "OR");
   mvaddstr(14, 3, "Press \"Enter\"");
   mvaddstr(15, 2, "to restart the game");
-  s21_print_field_frame();
-  s21_print_info_frame();
-  s21_print_buttons_frame();
-  s21_print_buttons();
+  print_field_frame();
+  print_info_frame();
+  print_buttons_frame();
+  print_buttons();
   mvaddch(0, COLS_FIELD * 2 + 13, ' ');
   refresh();
 }
 
-void s21_clear_field() {
+void clear_field() {
   for (int i = 0; i < ROWS_FIELD; i++) {
     for (int j = 0; j < COLS_FIELD; j++) {
       mvaddch(i + 1, j * 2 + 1, ' ');
@@ -57,8 +57,8 @@ void s21_clear_field() {
   }
 }
 
-void s21_print_game_over_menu(GameInfo_t gameInfo) {
-  s21_clear_field();
+void print_game_over_menu(GameInfo_t gameInfo) {
+  clear_field();
   mvaddstr(2, 8, "GAME OVER");
   mvprintw(4, 2, "Your score: %d", gameInfo.score);
   mvaddstr(9, 2, "Press \"Terminate\"");
@@ -66,15 +66,15 @@ void s21_print_game_over_menu(GameInfo_t gameInfo) {
   mvaddstr(12, 10, "OR");
   mvaddstr(14, 3, "Press \"Enter\"");
   mvaddstr(15, 2, "to restart the game");
-  s21_print_field_frame();
-  s21_print_info_frame();
-  s21_print_buttons_frame();
-  s21_print_buttons();
+  print_field_frame();
+  print_info_frame();
+  print_buttons_frame();
+  print_buttons();
   mvaddch(0, COLS_FIELD * 2 + 13, ' ');
   refresh();
 }
 
-void s21_print_field_frame() {
+void print_field_frame() {
   mvaddch(0, 0, ACS_ULCORNER);
   mvaddch(0, COLS_FIELD * 2 + 1, ACS_URCORNER);
   mvaddch(ROWS_FIELD + 1, 0, ACS_LLCORNER);
@@ -93,7 +93,7 @@ void s21_print_field_frame() {
   }
 }
 
-void s21_print_info_frame() {
+void print_info_frame() {
   mvaddch(0, COLS_FIELD * 2 + 2, ACS_ULCORNER);
   mvaddch(0, COLS_FIELD * 2 + 12, ACS_URCORNER);
   mvaddch(ROWS_FIELD + 1, COLS_FIELD * 2 + 2, ACS_LLCORNER);
@@ -112,7 +112,7 @@ void s21_print_info_frame() {
   }
 }
 
-void s21_print_field(GameInfo_t gameInfo) {
+void print_field(GameInfo_t gameInfo) {
   for (int i = 0; i < ROWS_FIELD; i++) {
     for (int j = 0; j < COLS_FIELD; j++) {
       if (gameInfo.field[i][j]) {
@@ -126,7 +126,7 @@ void s21_print_field(GameInfo_t gameInfo) {
   }
 }
 
-void s21_print_high_score(GameInfo_t gameInfo) {
+void print_high_score(GameInfo_t gameInfo) {
   char buffer[20];
   mvaddstr(2, COLS_FIELD * 2 + 3, "record:");
   sprintf(buffer, "%d", gameInfo.high_score);
@@ -134,7 +134,7 @@ void s21_print_high_score(GameInfo_t gameInfo) {
   mvaddstr(3, COLS_FIELD * 2 + 4, buffer);
 }
 
-void s21_print_score(GameInfo_t gameInfo) {
+void print_score(GameInfo_t gameInfo) {
   char buffer[20];
   mvaddstr(5, COLS_FIELD * 2 + 3, "score:");
   sprintf(buffer, "%d", gameInfo.score);
@@ -142,7 +142,7 @@ void s21_print_score(GameInfo_t gameInfo) {
   mvaddstr(6, COLS_FIELD * 2 + 4, buffer);
 }
 
-void s21_print_level(GameInfo_t gameInfo) {
+void print_level(GameInfo_t gameInfo) {
   char buffer[20];
   mvaddstr(8, COLS_FIELD * 2 + 3, "level:");
   sprintf(buffer, "%d", gameInfo.level);
@@ -150,7 +150,7 @@ void s21_print_level(GameInfo_t gameInfo) {
   mvaddstr(9, COLS_FIELD * 2 + 4, buffer);
 }
 
-void s21_print_next_figure(GameInfo_t gameInfo) {
+void print_next_figure(GameInfo_t gameInfo) {
   mvaddstr(11, COLS_FIELD * 2 + 3, "next:");
 
   for (int i = 0; i < ROWS_NEXT; i++) {
@@ -166,7 +166,7 @@ void s21_print_next_figure(GameInfo_t gameInfo) {
   }
 }
 
-void s21_print_buttons_frame() {
+void print_buttons_frame() {
   mvaddch(ROWS_FIELD + 2, 0, ACS_ULCORNER);
   mvaddch(ROWS_FIELD + 2, COLS_FIELD * 2 + 12, ACS_URCORNER);
   mvaddch(ROWS_FIELD + 8, 0, ACS_LLCORNER);
@@ -185,7 +185,7 @@ void s21_print_buttons_frame() {
   }
 }
 
-void s21_print_buttons() {
+void print_buttons() {
   mvaddstr(ROWS_FIELD + 3, 1, "^ - not used");
   mvaddstr(ROWS_FIELD + 4, 1, "-> - move right");
   mvaddstr(ROWS_FIELD + 5, 1, "<- - move left");

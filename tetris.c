@@ -1,14 +1,12 @@
 #include "tetris.h"
 
-#include "brick_game/tetris/backend.h"
-#include "gui/cli/frontend.h"
-
 int main() {
   initscr();
   cbreak();
   noecho();
   keypad(stdscr, TRUE);
   nodelay(stdscr, TRUE);
+  srand(time(NULL));
   game_loop();
   nodelay(stdscr, FALSE);
   endwin();
@@ -19,9 +17,9 @@ int main() {
 void game_loop() {
   UserAction_t action = Up;
   GameInfo_t info;
-  unsigned long time = s21_millis();
+  unsigned long time = millis();
   int flag = 1;
-  s21_print_start_menu();
+  print_start_menu();
   for (; action != Start && action != Terminate; action = getAct()) {
   }
   if (action == Terminate) {
@@ -30,24 +28,24 @@ void game_loop() {
   for (; flag;) {
     userInput(action, false);
     info = updateCurrentState();
-    if (s21_millis() - time > 1000.0 / info.speed) {
-      s21_clear_memory(&info);
+    if (millis() - time > 1000.0 / info.speed) {
+      clear_memory(&info);
       action = Down;
       userInput(action, true);
       info = updateCurrentState();
-      time = s21_millis();
+      time = millis();
     }
-    s21_print_owerlay(info);
+    print_owerlay(info);
     if (info.pause) {
-      s21_print_pause_menu();
-      s21_clear_memory(&info);
+      print_pause_menu();
+      clear_memory(&info);
       action = Up;
       for (; action != Start && action != Terminate && action != Pause;
            action = getAct()) {
       }
-    } else if (s21_check_end_game(info)) {
-      s21_print_game_over_menu(info);
-      s21_clear_memory(&info);
+    } else if (check_end_game(info)) {
+      print_game_over_menu(info);
+      clear_memory(&info);
       action = Up;
       for (; action != Start && action != Terminate; action = getAct()) {
       }
@@ -57,12 +55,12 @@ void game_loop() {
       }
     } else {
       action = getAct();
-      s21_clear_memory(&info);
+      clear_memory(&info);
     }
   }
 }
 
-void s21_clear_memory(GameInfo_t *info) {
+void clear_memory(GameInfo_t *info) {
   for (int m = 0; m < ROWS_FIELD; m++) {
     free(info->field[m]);
   }
@@ -109,7 +107,7 @@ UserAction_t getAct() {
   return action;
 }
 
-int s21_check_end_game(GameInfo_t info) {
+int check_end_game(GameInfo_t info) {
   int flag = 1;
   for (int i = 0; i < ROWS_NEXT; i++) {
     for (int j = 0; j < COLS_NEXT; j++) {
@@ -121,6 +119,6 @@ int s21_check_end_game(GameInfo_t info) {
   return flag;
 }
 
-unsigned long s21_millis() {
+unsigned long millis() {
   return (unsigned long)(clock() * 1000 / CLOCKS_PER_SEC);
 }
