@@ -4,6 +4,11 @@ FLAGS=-Wall -Werror -Wextra -std=c11 $(P)
 GCOV_FLAGS=-fprofile-arcs -ftest-coverage
 GCOV_REPORT_DIR = gcov_report
 LIBS=libtetris.a -lncurses
+PROJECT_NAME=tetris
+VERSION=1.2
+
+INSTALL_PREFIX ?= /usr/local
+BINDIR = $(PREFIX)/bin
 
 SOURCES=$(wildcard gui/cli/*.c) tetris.c
 OBJECTS = $(addprefix out/, $(notdir $(SOURCES:%.c=%.o)))
@@ -28,13 +33,15 @@ else
 endif
 
 #all: s21_matrix.a test gcov_report
-install: libtetris.a $(OBJECTS)
-	@touch data.txt
-	$(CC) $(FLAGS) $(OBJECTS) $(LIBS) -o tetris.out
-	@rm -f out/*.o
+install: tetris
+	@cp data.txt $(DESTDIR)$(BINDIR)/
+	@cp tetris $(DESTDIR)$(BINDIR)/
+	@chmod 755 $(DESTDIR)$(BINDIR)/tetris
+	@chmod 666 $(DESTDIR)$(BINDIR)/data.txt
+	@rm -f *.a out/*.o data.txt tetris
 
 uninstall:
-	@rm -f data.txt tetris.out
+	@rm -f $(DESTDIR)$(BINDIR)/tetris $(DESTDIR)$(BINDIR)/data.txt
 
 dvi:
 	@mkdir docs
@@ -45,6 +52,19 @@ dvi:
 	@echo "GENERATE_LATEX = NO" >> Doxyfile
 	@echo "INPUT = tetris.c tetris.h ./gui/cli ./brick_game/tetris" >> Doxyfile
 	@doxygen Doxyfile 
+
+dist:
+	tar czf $(PROJECT_NAME)-$(VERSION).tar.gz \
+	tetris.c tetris.h \
+	brick_game/ \
+	gui/ \
+	Makefile \
+
+tetris: libtetris.a $(OBJECTS)
+	@touch data.txt
+	@chmod 666 data.txt
+	$(CC) $(FLAGS) $(OBJECTS) $(LIBS) -o $@
+	@rm -f out/*.o
 
 libtetris.a: $(OBJECTS_LIBRARY)
 	@ar rcs $@ $^
@@ -62,8 +82,8 @@ out/%.o: gui/cli/%.c
 	$(CC) $(FLAGS) -c $< -o $@	
 
 clean:
-	@rm -f *.a out/*.o *.out Doxyfile
-	@rm -r docs
+	@rm -f *.a out/*.o *.out Doxyfile data.txt tetris
+	@test -d docs && rm -r docs || true
 
 # %.o.test: %.c
 # 	$(CC) $(FLAGS) $(GCOV_FLAGS) -c $< -o $@
