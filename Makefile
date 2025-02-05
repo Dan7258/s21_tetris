@@ -43,7 +43,7 @@ dvi:
 	@echo "OUTPUT_DIRECTORY = docs" >> Doxyfile
 	@echo "GENERATE_HTML = YES" >> Doxyfile
 	@echo "GENERATE_LATEX = NO" >> Doxyfile
-	@echo "INPUT = tetris.c tetris.h ./gui/cli" >> Doxyfile
+	@echo "INPUT = tetris.c tetris.h ./gui/cli ./brick_game/tetris" >> Doxyfile
 	@doxygen Doxyfile 
 
 libtetris.a: $(OBJECTS_LIBRARY)

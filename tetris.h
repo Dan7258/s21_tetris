@@ -1,6 +1,6 @@
 /**
  * @file tetris.h
- * @brief Заголовочный файл для Tetris.
+ * @brief Заголовочный файл для Тетриса.
  */
 #ifndef BRICK_GAME_H
 #define BRICK_GAME_H

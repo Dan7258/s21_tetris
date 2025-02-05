@@ -1,3 +1,7 @@
+/**
+ * @file matrix_functions.c
+ * @brief Реализация функций для работы с матрицами.
+ */
 #include "backend.h"
 
 void create_matrix(int rows, int columns, matrix_t *result) {

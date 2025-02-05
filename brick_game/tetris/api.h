@@ -1,37 +1,60 @@
+/**
+ * @file api.h
+ * @brief API для игры Тетрис.
+ *
+ * Этот файл содержит определения и объявления функций для API игры Тетрис.
+ */
 #ifndef API_H
 #define API_H
 
-#define ROWS_FIELD 20
-#define COLS_FIELD 10
-#define ROWS_NEXT 5
-#define COLS_NEXT 5
-#define MAX_LEVEL 10
+#define ROWS_FIELD 20 ///< Количество строк игрового поля
+#define COLS_FIELD 10 ///< Количество столбцов игрового поля
+#define ROWS_NEXT 5   ///< Количество строк для отображения следующей фигуры
+#define COLS_NEXT 5   ///< Количество столбцов для отображения следующей фигуры
+#define MAX_LEVEL 10  ///< Максимальный уровень игры
 
 #include <stdbool.h>
 
+/**
+ * @brief Перечисление возможных действий пользователя.
+ */
 typedef enum {
-  Start,
-  Pause,
-  Terminate,
-  Left,
-  Right,
-  Up,
-  Down,
-  Action
+  Start,     ///< Начало игры
+  Pause,     ///< Пауза
+  Terminate, ///< Завершение игры
+  Left,      ///< Движение влево
+  Right,     ///< Движение вправо
+  Up,        ///< Не используется в этой игре
+  Down,      ///< Движение вниз
+  Action     ///< Действие (в данной игре - поворот)
 } UserAction_t;
 
+/**
+ * @brief Структура, содержащая информацию о текущем состоянии игры.
+ */
 typedef struct {
-  int **field;
-  int **next;
-  int score;
-  int high_score;
-  int level;
-  int speed;
-  int pause;
+  int **field;      ///< Игровое поле
+  int **next;       ///< Следующая фигура
+  int score;        ///< Текущий счет
+  int high_score;   ///< Рекордный счет
+  int level;        ///< Текущий уровень
+  int speed;        ///< Скорость игры
+  int pause;        ///< Флаг паузы (1 - игра на паузе, 0 - игра идет)
 } GameInfo_t;
 
-// API functions
+/**
+ * @brief Обработка ввода пользователя.
+ *
+ * @param action Действие пользователя.
+ * @param hold Флаг удержания (для движения вниз).
+ */
 void userInput(UserAction_t action, bool hold);
+
+/**
+ * @brief Обновление текущего состояния игры.
+ *
+ * @return Структура GameInfo_t с обновленной информацией о состоянии игры.
+ */
 GameInfo_t updateCurrentState();
 
 #endif
