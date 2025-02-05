@@ -8,8 +8,8 @@
 #include <ncurses.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "brick_game/tetris/api.h"
 #include "gui/cli/frontend.h"
@@ -27,7 +27,8 @@ void game_loop();
 
 /**
  * @brief Проверяет, завершена ли игра.
- * @details Если в структуре info матрица со следующией фигурой пустая, значит игра завершена.
+ * @details Если в структуре info матрица со следующией фигурой пустая, значит
+ * игра завершена.
  * @param info Структура с информацией об игре.
  * @return 1, если игра завершена, иначе 0.
  */
