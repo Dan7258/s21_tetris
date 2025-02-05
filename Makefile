@@ -29,14 +29,25 @@ endif
 
 #all: s21_matrix.a test gcov_report
 install: libtetris.a $(OBJECTS)
-	touch data.txt
+	@touch data.txt
 	$(CC) $(FLAGS) $(OBJECTS) $(LIBS) -o tetris.out
+	@rm -f out/*.o
 
 uninstall:
-	rm -f libtetris.a out/*.o data.txt tetris.out
+	@rm -f data.txt tetris.out
+
+dvi:
+	@mkdir docs
+	@doxygen -g Doxyfile
+	@echo "PROJECT_NAME = \"Tetris\"" > Doxyfile
+	@echo "OUTPUT_DIRECTORY = docs" >> Doxyfile
+	@echo "GENERATE_HTML = YES" >> Doxyfile
+	@echo "GENERATE_LATEX = NO" >> Doxyfile
+	@echo "INPUT = tetris.c tetris.h ./gui/cli" >> Doxyfile
+	@doxygen Doxyfile 
 
 libtetris.a: $(OBJECTS_LIBRARY)
-	ar rcs $@ $^
+	@ar rcs $@ $^
 
 # libtest_tetris.a: $(TEST_OBJ)
 # 	ar rcs $@ $^
@@ -51,7 +62,8 @@ out/%.o: gui/cli/%.c
 	$(CC) $(FLAGS) -c $< -o $@	
 
 clean:
-	rm -f *.a out/*.o
+	@rm -f *.a out/*.o *.out Doxyfile
+	@rm -r docs
 
 # %.o.test: %.c
 # 	$(CC) $(FLAGS) $(GCOV_FLAGS) -c $< -o $@

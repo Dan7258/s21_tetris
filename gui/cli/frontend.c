@@ -1,3 +1,10 @@
+/**
+ * @file frontend.c
+ * @brief Отображение интерфейса игры Tetris
+ *
+ * @details Этот файл содержит реализацию функций для отрисовки различных элементов игрового интерфейса.
+ */
+
 #include "frontend.h"
 
 void print_owerlay(GameInfo_t gameInfo) {
@@ -16,9 +23,9 @@ void print_owerlay(GameInfo_t gameInfo) {
 
 void print_start_menu() {
   mvaddstr(2, 8, "TETRIS");
-  mvaddstr(4, 3, "Press \"Enter\" to");
-  mvaddstr(5, 4, "start the game");
-  mvaddstr(7, 10, "OR");
+  mvaddstr(4, 2, "Press \"Enter\" to");
+  mvaddstr(5, 2, "start the game");
+  mvaddstr(7, 2, "OR");
   mvaddstr(9, 2, "Press \"Terminate\"");
   mvaddstr(10, 2, "to exit the game");
   print_field_frame();
@@ -32,13 +39,13 @@ void print_start_menu() {
 void print_pause_menu() {
   clear_field();
   mvaddstr(2, 8, "PAUSE");
-  mvaddstr(4, 3, "Press \"Escape\" to");
-  mvaddstr(5, 4, "continue the game");
-  mvaddstr(7, 10, "OR");
+  mvaddstr(4, 2, "Press \"p\" to");
+  mvaddstr(5, 2, "continue the game");
+  mvaddstr(7, 2, "OR");
   mvaddstr(9, 2, "Press \"Terminate\"");
   mvaddstr(10, 2, "to exit the game");
-  mvaddstr(12, 10, "OR");
-  mvaddstr(14, 3, "Press \"Enter\"");
+  mvaddstr(12, 2, "OR");
+  mvaddstr(14, 2, "Press \"Enter\"");
   mvaddstr(15, 2, "to restart the game");
   print_field_frame();
   print_info_frame();
@@ -59,12 +66,12 @@ void clear_field() {
 
 void print_game_over_menu(GameInfo_t gameInfo) {
   clear_field();
-  mvaddstr(2, 8, "GAME OVER");
+  mvaddstr(2, 7, "GAME OVER");
   mvprintw(4, 2, "Your score: %d", gameInfo.score);
   mvaddstr(9, 2, "Press \"Terminate\"");
   mvaddstr(10, 2, "to exit the game");
-  mvaddstr(12, 10, "OR");
-  mvaddstr(14, 3, "Press \"Enter\"");
+  mvaddstr(12, 2, "OR");
+  mvaddstr(14, 2, "Press \"Enter\"");
   mvaddstr(15, 2, "to restart the game");
   print_field_frame();
   print_info_frame();
