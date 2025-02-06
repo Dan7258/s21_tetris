@@ -47,24 +47,26 @@ int main() {
 
 void game_loop() {
   UserAction_t action = Up;
+  UserAction_t preaction = Terminate;
   GameInfo_t info;
   unsigned long time = millis();
-  int flag = 1;
+  bool hold = false;
   print_start_menu();
   for (; action != Start && action != Terminate; action = getAct()) {
   }
-  if (action == Terminate) {
-    flag = 0;
-  }
-  for (; flag;) {
-    userInput(action, false);
+  for (;;) {
+    userInput(action, hold);
+    hold = false;
+    if (preaction == Terminate && action == Terminate) {
+      break;
+    }
     info = updateCurrentState();
     if (millis() - time > 1000.0 / info.speed) {
       clear_memory(&info);
       action = Down;
-      userInput(action, true);
-      info = updateCurrentState();
+      hold = true;
       time = millis();
+      continue;
     }
     print_owerlay(info);
     if (info.pause) {
@@ -74,17 +76,16 @@ void game_loop() {
       for (; action != Start && action != Terminate && action != Pause;
            action = getAct()) {
       }
+      preaction = Up;
     } else if (check_end_game(info)) {
       print_game_over_menu(info);
       clear_memory(&info);
       action = Up;
       for (; action != Start && action != Terminate; action = getAct()) {
       }
-      if (action == Terminate) {
-        userInput(action, false);
-        flag = 0;
-      }
+      preaction = action;
     } else {
+      preaction = Up;
       action = getAct();
       clear_memory(&info);
     }
