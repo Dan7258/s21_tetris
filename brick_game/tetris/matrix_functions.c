@@ -5,8 +5,7 @@
 #include "backend.h"
 
 void create_matrix(int rows, int columns, matrix_t *result) {
-  if (result == NULL) {
-  } else {
+  if (result != NULL) {
     result->rows = rows;
     result->columns = columns;
     result->matrix = (int **)malloc(rows * sizeof(int *));
@@ -17,10 +16,15 @@ void create_matrix(int rows, int columns, matrix_t *result) {
 }
 
 void remove_matrix(matrix_t *M) {
-  for (int m = 0; m < M->rows; m++) {
-    free(M->matrix[m]);
+  if (M != NULL) {
+    for (int m = 0; m < M->rows; m++) {
+      free(M->matrix[m]);
+    }
+    free(M->matrix);
+    M->rows = 0;
+    M->columns = 0;
+    M->matrix = NULL;
   }
-  free(M->matrix);
 }
 
 void turn_left_matrix(matrix_t *M) {

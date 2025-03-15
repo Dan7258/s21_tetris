@@ -33,8 +33,7 @@ void create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
 void remove_figure(figure_t *figure) { remove_matrix(figure->matrix); }
 
 void generate_figure(figure_t *figure) {
-  if (figure == NULL) {
-  } else {
+  if (figure != NULL) {
     remove_figure(figure);
     SelectedFigure_t select = rand() % 7;
     create_figure(select, figure);
