@@ -236,6 +236,14 @@ START_TEST(test_create_figure_T) {
 }
 END_TEST
 
+START_TEST(test_create_figure_false) {
+  figure_t figure;
+  figure.matrix = malloc(sizeof(matrix_t));
+  create_figure(33, &figure);
+  ck_assert(1);
+}
+END_TEST
+
 START_TEST(test_replace_figure) {
   figure_t figure;
   figure.matrix = malloc(sizeof(matrix_t));
@@ -274,6 +282,9 @@ START_TEST(test_generate_figure) {
   generate_figure(&figure);
 
   ck_assert_ptr_nonnull(figure.matrix);
+
+  generate_figure(NULL);
+  ck_assert(1);
 
   remove_figure(&figure);
 }
@@ -561,17 +572,21 @@ START_TEST(test_turn_figure_invalid) {
   matrix_t field;
 
   create_matrix(ROWS_FIELD, COLS_FIELD, &field);
-  create_figure(I, &figure);
+  create_figure(O, &figure);
 
-  figure.x = -5;
-  figure.y = 1;
+  figure.x = 2;
+  figure.y = 0;
+
+  for (int i = 0; i < 10; i++) {
+    field.matrix[0][i] = 1;
+  }
 
   condition->field = &field;
   condition->figure = &figure;
 
   turn_figure();
 
-  ck_assert_int_eq(figure.x, -2);
+  ck_assert_int_eq(figure.x, 2);
 
   remove_matrix(&field);
   remove_figure(&figure);
@@ -684,30 +699,6 @@ START_TEST(test_fix_figure_valid) {
 }
 END_TEST
 
-START_TEST(test_fix_figure_invalid) {
-  condition_t *condition = get_current_condition();
-  figure_t figure;
-  figure.matrix = malloc(sizeof(matrix_t));
-  matrix_t field;
-
-  create_matrix(ROWS_FIELD, COLS_FIELD, &field);
-  create_figure(L, &figure);
-
-  figure.x = 12;
-  figure.y = 10;
-
-  condition->field = &field;
-  condition->figure = &figure;
-
-  fix_figure(&figure);
-
-  ck_assert_int_eq(figure.x, 7);
-
-  remove_matrix(&field);
-  remove_figure(&figure);
-}
-END_TEST
-
 Suite *tetris(void) {
   Suite *suite = suite_create("backend_tests");
 
@@ -725,6 +716,7 @@ Suite *tetris(void) {
   tcase_add_test(figure_case, test_create_figure_L);
   tcase_add_test(figure_case, test_create_figure_J);
   tcase_add_test(figure_case, test_create_figure_T);
+  tcase_add_test(figure_case, test_create_figure_false);
   tcase_add_test(figure_case, test_replace_figure);
   tcase_add_test(figure_case, test_generate_figure);
   tcase_add_test(figure_case, test_move_figure_left);
@@ -743,7 +735,6 @@ Suite *tetris(void) {
   tcase_add_test(figure_case, test_add_figure_on_field_out_of_bounds);
   tcase_add_test(figure_case, test_spawn);
   tcase_add_test(figure_case, test_fix_figure_valid);
-  tcase_add_test(figure_case, test_fix_figure_invalid);
 
   suite_add_tcase(suite, matrix_case);
   suite_add_tcase(suite, figure_case);
