@@ -9,8 +9,14 @@
 #define FRONTEND_H
 
 #include <ncurses.h>
+#include <signal.h>
 
 #include "../../brick_game/tetris/api.h"
+
+/**
+ * @brief Проверяет изменение размера терминала
+ */
+void handle_resize();
 
 /**
  * @brief Отображает основной интерфейс игры

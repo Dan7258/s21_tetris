@@ -13,6 +13,7 @@
 
 #include "brick_game/tetris/api.h"
 #include "gui/cli/frontend.h"
+#include "signal.h"
 
 /**
  * @brief Получает ввод с клавиатуры.

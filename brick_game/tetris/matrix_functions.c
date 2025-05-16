@@ -20,10 +20,12 @@ void remove_matrix(matrix_t *M) {
     for (int m = 0; m < M->rows; m++) {
       free(M->matrix[m]);
     }
-    free(M->matrix);
-    M->rows = 0;
-    M->columns = 0;
-    M->matrix = NULL;
+    if (M->rows > 0) {
+      free(M->matrix);
+      M->rows = 0;
+      M->columns = 0;
+      M->matrix = NULL;
+    }
   }
 }
 

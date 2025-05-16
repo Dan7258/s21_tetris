@@ -268,19 +268,8 @@ void clean_condition() {
   condition_t *condition = get_current_condition();
   set_high_score_in_file(condition->high_score);
   remove_matrix(condition->field);
-  free(condition->field);
-  condition->field = NULL;
   remove_figure(condition->figure);
-  free(condition->figure->matrix);
-  free(condition->figure);
-  condition->figure->matrix = NULL;
-  condition->figure = NULL;
   remove_figure(condition->nextFigure);
-  free(condition->nextFigure->matrix);
-  free(condition->nextFigure);
-  condition->nextFigure->matrix = NULL;
-  condition->nextFigure = NULL;
-  condition = NULL;
 }
 
 void game_over() {

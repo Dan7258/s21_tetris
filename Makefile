@@ -8,13 +8,15 @@ LIBS_TEST= libtetris_test.a -lncurses
 PROJECT_NAME=tetris
 VERSION=1.2
 
+GAMEDIR=game
+
 INSTALL_PREFIX ?= /usr/local
 BINDIR = $(PREFIX)/bin
 
 SOURCES=$(wildcard gui/cli/*.c) tetris.c
 OBJECTS = $(addprefix out/, $(notdir $(SOURCES:%.c=%.o)))
 
-SOURCES_LIBRARY = $(wildcard brick_game/tetris/*.c) 
+SOURCES_LIBRARY = $(wildcard brick_game/tetris/*.c)
 OBJECTS_LIBRARY=$(addprefix out/, $(notdir $(SOURCES_LIBRARY:%.c=%.o)))
 
 TEST_SRC = $(wildcard tests/*.c) $(wildcard brick_game/tetris/*.c)
@@ -33,19 +35,18 @@ else
 	OPEN = open
 endif
 
-#all: s21_matrix.a test gcov_report
+all: install play
+
 install: tetris
-	@cp data.txt $(DESTDIR)$(BINDIR)/
-	@cp tetris $(DESTDIR)$(BINDIR)/
-	@chmod 755 $(DESTDIR)$(BINDIR)/tetris
-	@chmod 666 $(DESTDIR)$(BINDIR)/data.txt
-	@rm -f *.a out/*.o data.txt tetris
+	@mkdir -p $(GAMEDIR)
+	@cp tetris $(GAMEDIR)/
+	@rm -f *.a out/*.o tetris
 
 uninstall:
-	@rm -f $(DESTDIR)$(BINDIR)/tetris $(DESTDIR)$(BINDIR)/data.txt
+	@rm -f $(GAMEDIR)/tetris $(GAMEDIR)/data.txt
 
 dvi:
-	@mkdir docs
+	@mkdir -p docs
 	@doxygen -g Doxyfile
 	@echo "PROJECT_NAME = \"Tetris\"" > Doxyfile
 	@echo "OUTPUT_DIRECTORY = docs" >> Doxyfile
@@ -61,11 +62,15 @@ dist:
 	gui/ \
 	Makefile \
 
-tetris: libtetris.a $(OBJECTS)
-	@touch data.txt
-	@chmod 666 data.txt
+tetris: out libtetris.a $(OBJECTS)
 	$(CC) $(FLAGS) $(OBJECTS) $(LIBS) -o $@
 	@rm -f out/*.o
+	
+play:
+	./$(GAMEDIR)/tetris
+
+out:
+	@mkdir -p out
 
 libtetris.a: $(OBJECTS_LIBRARY)
 	@ar rcs $@ $^
@@ -83,7 +88,8 @@ out/%.o: gui/cli/%.c
 	$(CC) $(FLAGS) -c $< -o $@	
 
 clean:
-	@rm -f *.a out/*.o *.out Doxyfile data.txt tetris
+	@rm -f *.a *.out Doxyfile data.txt tetris 
+	@rm -rf out $(GAMEDIR) docs
 	@rm -f *.o *.a test *.gcda *.gcno *.gcov coverage.info brick_game/tetris/*.gcno brick_game/tetris/*.gcda tests/*.gcno tests/*.gcda gui/cli/*.gcno gui/cli/*.gcda
 	@rm -rf $(GCOV_REPORT_DIR) brick_game/tetris/*.o.test gui/cli/*.o.test tests/*.o.test *.o.test
 	@test -d docs && rm -r docs || true
@@ -95,13 +101,13 @@ test: clean libtetris_test.a
 	$(CC) $(FLAGS) $(GCOV_FLAGS) $(TEST_OBJ) $(LIBS_TEST) -o $@ $(LFLAGS)
 	./$@
 
-gcov_report: test
+gcov_report: clean test
 	lcov --capture --directory . --output-file coverage.info --rc lcov_branch_coverage=1
 	genhtml coverage.info --output-directory $(GCOV_REPORT_DIR) --branch-coverage
 
 	$(OPEN) $(GCOV_REPORT_DIR)/index.html
 
 clang:
-# cp ../materials/linters/.clang-format ../src/
+	cp ../materials/linters/.clang-format ../src/
 	clang-format -i tests/* brick_game/tetris/* *.h *.c gui/cli/*
-# rm -rf .clang-format
+	rm -rf .clang-format

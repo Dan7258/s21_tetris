@@ -699,6 +699,222 @@ START_TEST(test_fix_figure_valid) {
 }
 END_TEST
 
+// Вспомогательная функция для очистки состояния
+void teardown_condition(void) {
+  condition_t *condition = get_current_condition();
+  remove_matrix(condition->field);
+  free(condition->field);
+  remove_figure(condition->figure);
+  free(condition->figure->matrix);
+  free(condition->figure);
+  remove_figure(condition->nextFigure);
+  free(condition->nextFigure->matrix);
+  free(condition->nextFigure);
+}
+
+// Тесты для check_and_clear_rows
+START_TEST(test_check_and_clear_rows_empty_field) {
+  condition_t *condition = get_current_condition();
+  condition->field = malloc(sizeof(matrix_t));
+  create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
+
+  // Поле пустое
+  for (int i = 0; i < ROWS_FIELD; i++) {
+    for (int j = 0; j < COLS_FIELD; j++) {
+      condition->field->matrix[i][j] = 0;
+    }
+  }
+
+  int result = check_and_clear_rows();
+  ck_assert_int_eq(result, 0);  // Не должно быть удалённых рядов
+
+  remove_matrix(condition->field);
+}
+END_TEST
+
+START_TEST(test_check_and_clear_rows_one_filled_row) {
+  condition_t *condition = get_current_condition();
+  condition->field = malloc(sizeof(matrix_t));
+  create_matrix(ROWS_FIELD, COLS_FIELD, condition->field);
+
+  // Заполняем нижнюю строку
+  for (int j = 0; j < COLS_FIELD; j++) {
+    condition->field->matrix[ROWS_FIELD - 1][j] = 1;
+  }
+
+  int result = check_and_clear_rows();
+  ck_assert_int_eq(result, 1);  // Должен удалить один ряд
+  for (int j = 0; j < COLS_FIELD; j++) {
+    ck_assert_int_eq(condition->field->matrix[ROWS_FIELD - 1][j],
+                     0);  // Строка очищена
+  }
+
+  remove_matrix(condition->field);
+}
+END_TEST
+
+// Тесты для check_score
+START_TEST(test_check_score_single_line) {
+  condition_t *condition = get_current_condition();
+
+  condition->score = 0;
+  check_score(1);
+  ck_assert_int_eq(condition->score, 100);
+}
+END_TEST
+
+START_TEST(test_check_score_any_lines) {
+  condition_t *condition = get_current_condition();
+
+  condition->score = 0;
+  check_score(4);
+  ck_assert_int_eq(condition->score, 1500);
+  ck_assert_int_eq(condition->high_score, 1500);
+
+  check_score(3);
+  ck_assert_int_eq(condition->score, 2200);
+  ck_assert_int_eq(condition->high_score, 2200);
+
+  check_score(2);
+  ck_assert_int_eq(condition->score, 2500);
+  ck_assert_int_eq(condition->high_score, 2500);
+}
+END_TEST
+
+// Тесты для check_level
+START_TEST(test_check_level_initial) {
+  condition_t *condition = get_current_condition();
+  condition->score = 0;
+  check_level();
+  ck_assert_int_eq(condition->level, 1);
+}
+END_TEST
+
+START_TEST(test_check_level_max) {
+  init_condition();
+  condition_t *condition = get_current_condition();
+
+  condition->score = 6000;
+  check_level();
+  ck_assert_int_eq(condition->level, 10);
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_check_filled_row_full) {
+  init_condition();
+
+  int result = check_filled_row(0);
+  ck_assert_int_eq(result, 0);
+
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_check_filled_row_partial) {
+  init_condition();
+
+  int result = check_filled_row(0);
+  ck_assert_int_eq(result, 0);
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_move) {
+  init_condition();
+  condition_t *condition = get_current_condition();
+  add_figure_on_field();
+  move_left();
+  ck_assert_int_eq(condition->status, MovingG);
+
+  move_right();
+  ck_assert_int_eq(condition->status, MovingG);
+
+  move_down();
+  ck_assert_int_eq(condition->status, MovingG);
+
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_move_down_to_attach) {
+  init_condition();
+  condition_t *condition = get_current_condition();
+  add_figure_on_field();
+  move_all_down();
+  ck_assert_int_eq(condition->status, AttachingG);
+
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_check_lose) {
+  init_condition();
+  condition_t *condition = get_current_condition();
+
+  condition->field->matrix[0][0] = 1;
+  int result = check_lose();
+  ck_assert_int_eq(result, 1);
+
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_turn) {
+  init_condition();
+  condition_t *condition = get_current_condition();
+  add_figure_on_field();
+  turn();
+  ck_assert_int_eq(condition->status, MovingG);
+
+  remove_figure(condition->figure);
+  remove_matrix(condition->field);
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_game_over) {
+  init_condition();
+  game_over();
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_start_game) {
+  start_game();
+  condition_t *condition = get_current_condition();
+  ck_assert_int_eq(condition->status, MovingG);
+  condition->status = PauseG;
+  start_game();
+  ck_assert_int_eq(condition->status, MovingG);
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_update_current_state) {
+  init_condition();
+  GameInfo_t game_info = updateCurrentState();
+  condition_t *condition = get_current_condition();
+  ck_assert_int_eq(condition->score, game_info.score);
+  ck_assert_int_eq(condition->level, game_info.level);
+  clean_condition();
+}
+END_TEST
+
+START_TEST(test_actions) {
+  init_condition();
+  userInput(Start, 0);
+  userInput(Left, 0);
+  userInput(Right, 0);
+  userInput(Pause, 0);
+  userInput(Pause, 0);
+  userInput(Action, 0);
+  userInput(Down, 1);
+  userInput(Down, 0);
+  clean_condition();
+}
+END_TEST
+
 Suite *tetris(void) {
   Suite *suite = suite_create("backend_tests");
 
@@ -736,8 +952,27 @@ Suite *tetris(void) {
   tcase_add_test(figure_case, test_spawn);
   tcase_add_test(figure_case, test_fix_figure_valid);
 
+  TCase *fsm_case = tcase_create("fsm_test");
+  tcase_add_test(fsm_case, test_check_and_clear_rows_empty_field);
+  tcase_add_test(fsm_case, test_check_and_clear_rows_one_filled_row);
+  tcase_add_test(fsm_case, test_check_score_single_line);
+  tcase_add_test(fsm_case, test_check_score_any_lines);
+  tcase_add_test(fsm_case, test_check_level_initial);
+  tcase_add_test(fsm_case, test_check_level_max);
+  tcase_add_test(fsm_case, test_check_filled_row_full);
+  tcase_add_test(fsm_case, test_check_filled_row_partial);
+  tcase_add_test(fsm_case, test_move);
+  tcase_add_test(fsm_case, test_move_down_to_attach);
+  tcase_add_test(fsm_case, test_check_lose);
+  tcase_add_test(fsm_case, test_turn);
+  tcase_add_test(fsm_case, test_game_over);
+  tcase_add_test(fsm_case, test_start_game);
+  tcase_add_test(fsm_case, test_update_current_state);
+  tcase_add_test(fsm_case, test_actions);
+
   suite_add_tcase(suite, matrix_case);
   suite_add_tcase(suite, figure_case);
+  suite_add_tcase(suite, fsm_case);
   return suite;
 }
 

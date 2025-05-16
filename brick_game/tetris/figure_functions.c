@@ -30,7 +30,11 @@ void create_figure(SelectedFigure_t SelectedFigure, figure_t *figure) {
   }
 }
 
-void remove_figure(figure_t *figure) { remove_matrix(figure->matrix); }
+void remove_figure(figure_t *figure) {
+  if (figure != NULL) {
+    remove_matrix(figure->matrix);
+  }
+}
 
 void generate_figure(figure_t *figure) {
   if (figure != NULL) {

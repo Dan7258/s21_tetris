@@ -8,7 +8,10 @@
 
 #include "frontend.h"
 
+void handle_resize() { endwin(); }
+
 void print_owerlay(GameInfo_t gameInfo) {
+  signal(SIGWINCH, handle_resize);
   print_field(gameInfo);
   print_next_figure(gameInfo);
   print_high_score(gameInfo);
@@ -23,6 +26,7 @@ void print_owerlay(GameInfo_t gameInfo) {
 }
 
 void print_start_menu() {
+  signal(SIGWINCH, handle_resize);
   mvaddstr(2, 8, "TETRIS");
   mvaddstr(4, 2, "Press \"Enter\" to");
   mvaddstr(5, 2, "start the game");
@@ -38,6 +42,7 @@ void print_start_menu() {
 }
 
 void print_pause_menu() {
+  signal(SIGWINCH, handle_resize);
   clear_field();
   mvaddstr(2, 8, "PAUSE");
   mvaddstr(4, 2, "Press \"p\" to");
@@ -66,6 +71,7 @@ void clear_field() {
 }
 
 void print_game_over_menu(GameInfo_t gameInfo) {
+  signal(SIGWINCH, handle_resize);
   clear_field();
   mvaddstr(2, 7, "GAME OVER");
   mvprintw(4, 2, "Your score: %d", gameInfo.score);
